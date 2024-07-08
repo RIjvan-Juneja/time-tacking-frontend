@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const InputField = ({ id, name, label, type, value, placeholder, error, onChange }) => {
   return (
@@ -16,11 +16,11 @@ export const InputField = ({ id, name, label, type, value, placeholder, error, o
         />
         <p className={`text-red-500 text-sm mt-1 ${error ? ' ' : 'invisible'}`}>{(error) ? error : "."}</p>
       </div>
-    </> 
+    </>
   );
 };
 
-export const SelectBox =  React.memo(({ id, name, label, options, value, onChange, error, multiple }) => {
+export const SelectBox = React.memo(({ id, name, label, options, value, onChange, error, multiple }) => {
   return (
     <>
       <div className="mb-4">
@@ -30,7 +30,7 @@ export const SelectBox =  React.memo(({ id, name, label, options, value, onChang
           id={id}
           value={value}
           name={name}
-          multiple = {multiple}
+          multiple={multiple}
           onChange={onChange}
           className={`block w-full px-4 py-3 bg-white border rounded-lg focus:ring-blue-500 focus:border-blue-500  dark:focus:border-blue-500`}
         >
@@ -50,7 +50,7 @@ export const SelectBox =  React.memo(({ id, name, label, options, value, onChang
   )
 })
 
-export const Textarea =  React.memo(({ id, label, value, error, onChange }) => {
+export const Textarea = React.memo(({ id, label, value, error, onChange }) => {
   return (
     <>
       <div className="mb-4">
@@ -61,7 +61,7 @@ export const Textarea =  React.memo(({ id, label, value, error, onChange }) => {
           name={id}
           rows="3"
           value={value}
-          onChange = {onChange}
+          onChange={onChange}
         ></textarea>
         <p className={`text-red-500 text-sm mt-1 ${error ? ' ' : 'invisible'}`}>{(error) ? error : "."}</p>
       </div>
@@ -69,7 +69,7 @@ export const Textarea =  React.memo(({ id, label, value, error, onChange }) => {
   )
 })
 
-export const Button =  ({ id, type, lable, onClick, customClass }) => {
+export const Button = ({ id, type, lable, onClick, customClass }) => {
   return (
     <>
       <button
@@ -84,20 +84,20 @@ export const Button =  ({ id, type, lable, onClick, customClass }) => {
   )
 }
 
-export const MultiCheckBox =  React.memo(({value, id, label, isChecked, name, onChange}) => {
+export const MultiCheckBox = React.memo(({ value, id, label, isChecked, name, onChange }) => {
   return (
     <>
       <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
         <div className="flex items-center ps-3">
-          <input 
-          id={id} 
-          type="checkbox" 
-          value={value}
-          name={name}
-          onChange={onChange}
-          defaultChecked={isChecked}
-          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-          
+          <input
+            id={id}
+            type="checkbox"
+            value={value}
+            name={name}
+            onChange={onChange}
+            defaultChecked={isChecked}
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+
           <label htmlFor={id} className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{label}</label>
         </div>
       </li>
@@ -105,3 +105,31 @@ export const MultiCheckBox =  React.memo(({value, id, label, isChecked, name, on
   )
 })
 
+export const FileField = ({ id, name, label, error, onChange, previewsrc }) => {
+  const [file, setFile] = useState();
+  const previewTypes = [ 'image/gif', 'image/jpeg', 'image/jpg', 'image/png' , 'image/svg+xml' ]
+
+  function handleChange(e) {
+    setFile(null)
+    console.log(e.target.files[0].type);
+
+    if(previewTypes.includes(e.target.files[0].type)){
+      setFile(URL.createObjectURL(e.target.files[0]));
+    }
+
+    if(onChange) onChange(e);
+  }
+
+  useEffect(() => {
+    previewsrc && setFile(previewsrc)
+  },[previewsrc])
+
+  return (
+    <>
+      <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor={id}>{label}</label>
+      <input className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200" name={name} aria-describedby="user_avatar_help" id={id} type="file" onChange={handleChange} />
+      <p className={`text-red-500 text-sm mt-1 ${error ? ' ' : 'invisible'}`}>{(error) ? error : "."}</p>
+      <img className='mt-7 w-[350px]' src={file} />
+    </>
+  )
+}
