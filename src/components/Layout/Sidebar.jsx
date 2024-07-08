@@ -10,7 +10,7 @@ const Sidebar = ({ toggleMenu } )  => {
         </div>
         <ul className="nav-links">
           <li>
-            <a href="#">
+            <a href="#">  
               <i className='bx bx-grid-alt'></i>
               <span className="link_name">Dashboard</span>
             </a>

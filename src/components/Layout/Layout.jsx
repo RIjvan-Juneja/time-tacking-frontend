@@ -10,9 +10,9 @@ const Layout = () => {
       <Sidebar toggleMenu={toggleMenu} setToggleMenu={setToggleMenu} />
       <section className="home-section ">
         <Header toggleMenu={toggleMenu} setToggleMenu={setToggleMenu} />
-        <div className="h mx-9 mt-7 bg-white p-4">
-          <Outlet />
-        </div>
+
+        <Outlet />
+
       </section>
     </>
   )

@@ -1,11 +1,6 @@
-import React from 'react'
-{/* */ }
-
 const Header = ({ toggleMenu, setToggleMenu }) => {
   return (
     <>
-
-
       <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700" style={{padding: "2px 16px"}}>
         <div className="flex flex-wrap items-center justify-between mx-auto p-4">
             <ul className="flex w-full justify-between">
