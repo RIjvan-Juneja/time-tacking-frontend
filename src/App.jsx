@@ -1,13 +1,12 @@
-import { useState } from 'react'
-import './App.css'
+import PublicRoute from './routers/PublicRoute'
+import './assets/css/index.css'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <h1>Time-tracking</h1>
-    </>
+      <PublicRoute />
+    </> 
   )
 }
 
