@@ -2,7 +2,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button, FileField, InputField, SelectBox, Textarea } from '../../../components/Forms/FormFields';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Loader from '../../../components/Layout/Loader';
 
 // Zod schema for form validation
 const taskSchema = z.object({
@@ -24,6 +25,8 @@ const taskSchema = z.object({
 
 const TaskForm = () => {
 
+  const [loading, setLoading] = useState(false);
+
   const { control, handleSubmit, formState: { errors }, setValue } = useForm({
     resolver: zodResolver(taskSchema),
     defaultValues: {
@@ -35,29 +38,38 @@ const TaskForm = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
+    setLoading(true);
 
     const formData = new FormData();
     formData.append('title', data.title);
     formData.append('category', data.category);
     formData.append('description', data.description);
     formData.append('attachment', data.attachment);
-
-    const response = await fetch('http://localhost:8080/task/api/add', {
-      method: 'POST',
-      body: formData,
-      credentials : 'include'
-    })
-
-    const datas = await response.json();
-
-    console.log(response,datas);
-
+    try {
+      const response = await fetch('http://localhost:8080/task/api/add', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      })
+      
+      const datas = await response.json();
+      if(response.status == 200){
+        setLoading(false);
+        alert(datas.message);
+      } else {
+        setLoading(false);
+        alert(datas.message);
+      }
+  
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     // if(0){
-      // setValue("title", "Task Title 1");
+    // setValue("title", "Task Title 1");
     //   setValue("category", "Category 1");
     //   setValue("description", "Task Description");
     //   setValue("attachment", null); // Reset file input field
@@ -66,13 +78,14 @@ const TaskForm = () => {
 
   return (
     <>
+      { loading && <Loader /> }  
       <h3 className="mx-9 mt-9 text-3xl font-bold dark:text-white">Task Form</h3>
       <div className="mx-9 mt-7 bg-white p-4">
         <form className="m-5" onSubmit={handleSubmit(onSubmit)}>
           <Controller
             name="title"
             control={control}
-            render={({ field  }) => (
+            render={({ field }) => (
               <InputField
                 {...field}
                 ref={null}

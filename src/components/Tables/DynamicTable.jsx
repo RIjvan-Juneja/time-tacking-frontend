@@ -7,7 +7,6 @@ const DynamicTable = ({ columns, data }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState(data);
 
-
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
