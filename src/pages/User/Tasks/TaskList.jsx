@@ -1,6 +1,30 @@
 import {  NavLink } from "react-router-dom"
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTasks } from '../../../redux/slices/TasksSlice';
+import { useEffect } from "react";
 
 const TaskList = () => {
+
+  const dispatch = useDispatch();
+  const tasks = useSelector((state) => state.tasks.task);
+
+  useEffect(() => {
+    if (tasks.status === 'idle') {
+      dispatch(fetchTasks());
+    }
+  }, [tasks.status, dispatch]);
+
+  if (tasks.status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (tasks.status === 'failed') {
+    return <div>Error: {tasks.error}</div>;
+  }
+
+  console.log(tasks);
+  
+
   return (
     <>
       <div className="flex justify-between">

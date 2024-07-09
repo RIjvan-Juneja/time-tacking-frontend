@@ -1,56 +1,40 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+// src/features/task/taskSlice.js
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { postRequest } from '../../common/helper/postRequest'; // Adjust the path to where your function is located
 
-const productSlice = createSlice({
-  name: 'product',
+export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async () => {
+  const { result } = await postRequest('/task/api/getTasks');
+  console.log(result);
+  return result;
+});
+
+const taskSlice = createSlice({
+  name: 'tasks',
   initialState: {
-    data: [],
-    status: STATUSES.SUCCESS,
+    task: {
+      data: [],
+      status: 'idle',
+      error: false,
+    },
   },
   reducers: {
-    setproducts(state, action) {
-      state.data = action.payload;
-    },
-    setStatus(state, action) {
-      state.status = action.payload;
-    },
-    
-    fetchCartProducts(state, action) { 
 
-      const cartProducts = action.payload;  
-
-      return state.data.map((product) => {
-        const cartProduct = cartProducts.find((cp) => cp.id === product.id);
-        if(cartProduct){
-          return {
-            ...product,
-            cartCount: cartProduct ? cartProduct.cartCount : 0,
-          };
-        }else {
-          // const data = state.data.filter((product) => product.id !== payload)
-          // console.log("else");
-        }
-        
-      });
-    }
   },
-
   extraReducers: (builder) => {
-    builder.addCase(fetchAllProduct.pending, (state) => {
-      state.status = STATUSES.LOADING;
-    })
-    builder.addCase(fetchAllProduct.rejected, (state, action) => {
-      console.error(action.error);
-      state.status = STATUSES.ERROR;
-      state.data = action.error;
-    })
-    builder.addCase(fetchAllProduct.fulfilled, (state, action) => {
-      state.data = action.payload;
-      state.status = STATUSES.SUCCESS;
-    })
+    builder
+      .addCase(fetchTasks.pending, (state) => {
+        state.task.status = 'loading';
+      })
+      .addCase(fetchTasks.fulfilled, (state, action) => {
+        state.task.status = 'succeeded';
+        state.task.data = action.payload;
+        state.task.error = false;
+      })
+      .addCase(fetchTasks.rejected, (state, action) => {
+        state.task.status = 'failed';
+        state.task.error = action.error.message;
+      });
   }
-})
+});
 
-
-export const { setproducts, setStatus } = productSlice.actions;
-export default productSlice.reducer;
-
+export default taskSlice.reducer;
