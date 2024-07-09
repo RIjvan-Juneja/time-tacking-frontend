@@ -4,6 +4,7 @@ import * as z from 'zod';
 import { Button, FileField, InputField, SelectBox, Textarea } from '../../../common/components/Forms/FormFields';
 import { useEffect, useState } from 'react';
 import Loader from '../../../common/components/Layout/Loader';
+import { postRequest } from '../../../common/helper/postRequest';
 
 // Zod schema for form validation
 const taskSchema = z.object({
@@ -45,22 +46,20 @@ const TaskForm = () => {
     formData.append('category', data.category);
     formData.append('description', data.description);
     formData.append('attachment', data.attachment);
+
     try {
-      const response = await fetch('http://localhost:8080/task/api/add', {
-        method: 'POST',
-        body: formData,
-        credentials: 'include'
-      })
-      
-      const datas = await response.json();
-      if(response.status == 200){
+
+      const { response, result } = await postRequest('/task/api/add', formData);
+
+      if (response.status == 200) {
         setLoading(false);
-        alert(datas.message);
+        alert(result.message);
+
       } else {
         setLoading(false);
-        alert(datas.message);
+        alert(result.message);
       }
-  
+
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -78,7 +77,7 @@ const TaskForm = () => {
 
   return (
     <>
-      { loading && <Loader /> }  
+      {loading && <Loader />}
       <h3 className="mx-9 mt-9 text-3xl font-bold dark:text-white">Task Form</h3>
       <div className="mx-9 mt-7 bg-white p-4">
         <form className="m-5" onSubmit={handleSubmit(onSubmit)}>
