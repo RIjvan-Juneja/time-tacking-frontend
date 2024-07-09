@@ -1,9 +1,9 @@
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Button, FileField, InputField, SelectBox, Textarea } from '../../../components/Forms/FormFields';
+import { Button, FileField, InputField, SelectBox, Textarea } from '../../../common/components/Forms/FormFields';
 import { useEffect, useState } from 'react';
-import Loader from '../../../components/Layout/Loader';
+import Loader from '../../../common/components/Layout/Loader';
 
 // Zod schema for form validation
 const taskSchema = z.object({

@@ -1,5 +1,5 @@
-import PublicRoute from './routers/PublicRoute'
-import './assets/css/index.css'
+import PublicRoute from '../routers/PublicRoute'
+import '../assets/css/index.css'
 
 function App() {
 
