@@ -23,6 +23,7 @@ const taskSchema = z.object({
 // const _taskID = 0;
 
 const TaskForm = () => {
+
   const { control, handleSubmit, formState: { errors }, setValue } = useForm({
     resolver: zodResolver(taskSchema),
     defaultValues: {
@@ -33,8 +34,25 @@ const TaskForm = () => {
     }
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
+
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('category', data.category);
+    formData.append('description', data.description);
+    formData.append('attachment', data.attachment);
+
+    const response = await fetch('http://localhost:8080/task/api/add', {
+      method: 'POST',
+      body: formData,
+      credentials : 'include'
+    })
+
+    const datas = await response.json();
+
+    console.log(response,datas);
+
   };
 
   useEffect(() => {
