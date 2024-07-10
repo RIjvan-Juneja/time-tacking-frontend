@@ -1,17 +1,24 @@
 import { NavLink } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTasks } from '../../../redux/slices/TasksSlice';
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DynamicTable from "../../../common/components/Tables/DynamicTable";
 import { filterTasksByCategory } from '../../../redux/slices/TasksSlice';
 import Swal from 'sweetalert2'
+import { postRequest } from "../../../common/helper/postRequest";
+import TaskDetails from "./TaskDetails";
 
 
 const TaskList = () => {
 
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks.task);
-  console.log(tasks.filteredData);
+  const [selectedTask, setSelectedTask] = useState(null);
+
+  const viewSelectedTask = useCallback((_id) => {
+    setSelectedTask(tasks.filteredData.find((task) => task.id === _id));
+  },[tasks.filteredData])
+  // console.log(tasks.filteredData);
 
   useEffect(() => {
     if (tasks.status === 'idle') {
@@ -27,8 +34,12 @@ const TaskList = () => {
     return <div>Error: {tasks.error}</div>;
   }
 
-  const handleDeleteTask = (id) => {
-    Swal.fire({
+  // const deleteRequest = async (id) => {
+
+  // }
+
+  const handleDeleteTask = async (_id) => {
+    const swals = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
       icon: "warning",
@@ -36,17 +47,30 @@ const TaskList = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Swal.fire({
-        //   title: "Deleted!",
-        //   text: "Your file has been deleted.",
-        //   icon: "success"
-        // });
+    })
+    // console.log(swals);
+    if (swals.isConfirmed) {
+
+      const { response, result } = await postRequest(`/task/api/delete/${_id}`);
+      console.log(result);
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success"
+        });
+        dispatch(fetchTasks());
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+        });
+        console.log(result.message);
       }
-    });
+    }
   }
-  
+
   const columns = [
     { Header: 'Id', accessor: 'id' },
     { Header: 'Title', accessor: 'title' },
@@ -69,7 +93,7 @@ const TaskList = () => {
           <button type='button' onClick={() => handleDeleteTask(row.id)} className="font-medium ml-2 text-red-600 dark:text-red-500 hover:underline">
             delete
           </button>
-          <button type='button' onClick={() => console.log(row.id)} className="font-medium ml-2 text-red-600 dark:text-red-500 hover:underline">
+          <button type='button' onClick={() => viewSelectedTask(row.id)} className="font-medium ml-2 text-red-600 dark:text-red-500 hover:underline">
             view
           </button>
         </>
@@ -80,8 +104,6 @@ const TaskList = () => {
   const filterTask = (e) => {
     dispatch(filterTasksByCategory(e.target.value));
   }
-
-  
 
   return (
     <>
@@ -103,7 +125,9 @@ const TaskList = () => {
             </select>
             <DynamicTable columns={columns} data={tasks.filteredData} />
           </div>
-          <div className="w-[480px] h-auto shadow-md p-5"> second</div>
+          <div className="w-[480px] h-auto shadow-md p-5"> 
+            <TaskDetails data={selectedTask} />
+          </div>
         </div>
       </div>
 
