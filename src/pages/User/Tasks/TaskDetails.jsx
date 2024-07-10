@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { compareAsc, format } from "date-fns";
 import { Button } from '../../../common/components/Forms/FormFields';
 import { postRequest } from '../../../common/helper/postRequest';
@@ -20,9 +20,35 @@ const InfoTime = ({ customClass, time, lable }) => {
 
 const TaskDetails = ({ data }) => {
 
-  const [lastLog, setLastLog] = useState(false)
+  const [lastLog, setLastLog] = useState(true)
+  const [logData, setLogData] = useState([])
 
-  if (!data) return (<>No Records Found</>)
+  const FetchLogData = async () => {
+    try {
+      // const { response, result } = postRequest(`/tasklogs/api/logs/${data.id}`)
+      // console.log(response,result,"new");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/tasklogs/api/logs/${data.id}`, {
+        method: 'POST',
+      });
+      const result = await response.json();
+      if (response.status === 200) {
+        console.log(result);
+        setLogData(result.data);
+        setLastLog(!result.data.some(obj => obj.end_datetime === null));
+
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  useEffect(() => {
+    if (data) {
+      FetchLogData();
+    }
+  }, [data?.id, lastLog])
 
   const actionTimeLog = async (action) => {
     // console.log(data.id);
@@ -37,40 +63,25 @@ const TaskDetails = ({ data }) => {
         }
       }, true)
 
+      if (response.status == 200) {
+        FetchLogData();
+      }
+
       console.log(result);
 
     } catch (error) {
       console.log(error);
     }
 
-    // if (data.tasks_time_logs.length > 0) {
-    //   const lastLog = data.tasks_time_logs[data.tasks_time_logs.length - 1];
-    //   const currentTime = new Date();
-    //   const lastLogTime = new Date(lastLog.start_datetime);
-    //   const difference = compareAsc(currentTime, lastLogTime);
-    //   console.log(difference);
-
-    //   if (difference > 0) {
-    //     alert('You are already in action. Please puase the task.');
-    //     return;
-    //   }
-    // }
-
-    // const startTime = new Date();
-    // const newLog = {
-    //   id: data.tasks_time_logs.length + 1,
-    //   start_datetime: startTime,
-    //   end_datetime: null,
-    // };
-    // data.tasks_time_logs.push(newLog);
-
   }
+
+  if (!data) return (<>No Records Found</>)
 
   return (
     <>
       <div className="grid grid-cols-2 gap-4 mt-5 mb-3">
-        <Button type="button" lable="start" onClick={() => actionTimeLog('start')} />
-        <Button type="button" lable="puase" onClick={() => actionTimeLog('end')} />
+        <Button type="button" lable="start" isDisabled={!lastLog} onClick={() => actionTimeLog('start')} />
+        <Button type="button" lable="puase" isDisabled={lastLog} onClick={() => actionTimeLog('end')} />
       </div>
       <hr />
 
@@ -89,8 +100,8 @@ const TaskDetails = ({ data }) => {
 
         {/* Logs Datas  */}
         <div className="mt-8">
-          {(data?.tasks_time_logs.length > 0) && (
-            data.tasks_time_logs.map((task) => {
+          {(logData.length > 0) && (
+            logData.map((task) => {
               return (
                 <div key={task.id}>
                   <InfoTime customClass='text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:text-blue-400 dark:border-blue-800' lable='Start' time={format(task.start_datetime, 'hh:mm a')} />
