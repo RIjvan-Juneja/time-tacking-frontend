@@ -63,11 +63,7 @@ const TaskDetails = ({ data }) => {
         }
       }, true)
 
-      if (response.status == 200) {
-        FetchLogData();
-      }
-
-      console.log(result);
+      FetchLogData();
 
     } catch (error) {
       console.log(error);
