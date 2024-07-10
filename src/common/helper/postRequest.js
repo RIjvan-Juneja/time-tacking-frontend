@@ -6,7 +6,6 @@ export const postRequest = async (url, payload = {}) => {
       body: payload,
       credentials: 'include'
     })
-    console.log(response,"res");
     const result = await response.json();
     return { response, result }
   } catch (error) {
