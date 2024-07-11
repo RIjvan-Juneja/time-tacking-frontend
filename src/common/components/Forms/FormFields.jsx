@@ -69,14 +69,16 @@ export const Textarea = React.memo(({ id, label, value, error, onChange }) => {
   )
 })
 
-export const Button = ({ id, type, lable, onClick, customClass }) => {
+export const Button = ({ id, type, lable, onClick, customClass, isDisabled }) => {
+  
   return (
     <>
       <button
         type={type}
         id={id}
         onClick={onClick}
-        className={`bg-indigo-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${customClass}`}
+        disabled={isDisabled}
+        className={`${isDisabled? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'} text-white px-4 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${customClass}`}
       >
         {lable}
       </button>
