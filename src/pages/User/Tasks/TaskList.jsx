@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTasks } from '../../../redux/slices/TasksSlice';
 import { useCallback, useEffect, useState } from "react";
@@ -14,6 +14,8 @@ const TaskList = () => {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks.task);
   const [selectedTask, setSelectedTask] = useState(null);
+  const navigate = useNavigate();
+
 
   const viewSelectedTask = useCallback((_id) => {
     setSelectedTask(tasks.filteredData.find((task) => task.id === _id));
@@ -87,7 +89,7 @@ const TaskList = () => {
       Header: 'Action', accessor: 'action',
       Cell: (_, row) => (
         <>
-          <button type='button' onClick={() => console.log(row.id)} className="font-medium ml-2 text-red-600 dark:text-red-500 hover:underline">
+          <button type='button' onClick={() => navigate(`/task/form/${row.id}`)} className="font-medium ml-2 text-red-600 dark:text-red-500 hover:underline">
             edit
           </button>
           <button type='button' onClick={() => handleDeleteTask(row.id)} className="font-medium ml-2 text-red-600 dark:text-red-500 hover:underline">

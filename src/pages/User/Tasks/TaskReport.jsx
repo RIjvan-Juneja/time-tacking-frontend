@@ -18,7 +18,7 @@ const TaskReport = () => {
     { Header: 'Id', accessor: 'id' },
     { Header: 'Task Type', accessor: 'category_name' },
     { Header: 'Title', accessor: 'title' },
-    { Header: 'Total Hours', accessor: 'totalHours' },
+    { Header: 'Total Minute', accessor: 'totalHours' },
   ]
 
   const fetchReportData = async (reportType) => {

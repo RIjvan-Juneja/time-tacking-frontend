@@ -5,12 +5,15 @@ import Page404 from '../common/components/Layout/Page404'
 import TaskList from '../pages/User/Tasks/TaskList'
 import TaskForm from '../pages/User/Tasks/TaskForm'
 import TaskReport from '../pages/User/Tasks/TaskReport'
+import Login from '../pages/Authentication/Login'
+import Registation from '../pages/Authentication/Registation'
 
 const PublicRoute = () => {
   return (
     <>
       <BrowserRouter>
         <Routes>
+          
           <Route path="/" element={<Layout />}>
             <Route path='/dashboard' element={<UserDashboard />} />
             <Route path='/task/list' element={<TaskList />} />
@@ -19,6 +22,10 @@ const PublicRoute = () => {
             <Route path='/task/Logs' element={<TaskReport />} />
             <Route path="*" element={<Page404 />} />
           </Route>
+
+          <Route path='/login' element={<Login />} />
+          <Route path='/registation' element={<Registation />} />
+          
         </Routes>
       </BrowserRouter>
     </>
