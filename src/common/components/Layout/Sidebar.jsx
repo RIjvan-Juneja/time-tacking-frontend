@@ -27,6 +27,12 @@ const Sidebar = ({ toggleMenu }) => {
               <span className="link_name">Tasks Form</span>
             </NavLink>
           </li>
+          <li className='mt-10'>
+            <NavLink to="/task/Logs" className={({ isActive }) => `${isActive && 'active-tab'}`}>
+              <i className='bx bx-grid-alt'></i>
+              <span className="link_name">Tasks Report</span>
+            </NavLink>
+          </li>
         </ul>
       </div>
     </>

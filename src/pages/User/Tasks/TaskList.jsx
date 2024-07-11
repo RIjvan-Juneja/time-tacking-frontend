@@ -107,7 +107,6 @@ const TaskList = () => {
 
   return (
     <>
-
       <div className="flex justify-between">
         <h3 className="mx-9 mt-9 text-3xl font-bold dark:text-white">Task List</h3>
         <div className="mt-12 mr-7">
@@ -130,7 +129,6 @@ const TaskList = () => {
           </div>
         </div>
       </div>
-
     </>
   )
 }
