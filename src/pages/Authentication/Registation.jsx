@@ -1,5 +1,5 @@
 import React from 'react'
-import { InputField } from '../../common/components/Forms/FormFields'
+import { Button, InputField, SelectBox } from '../../common/components/Forms/FormFields'
 
 const Registation = () => {
   return (
@@ -20,30 +20,31 @@ const Registation = () => {
         </div>
 
         {/* id, name, label, type, value, placeholder, error, onChange */}
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="mt-8 sm:mx-auto w-[57rem] ">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form>
-              <div>
-                <InputField id='email' name='name' label='Email' type='email' error={``} placeholder='Enter Your Email' />
+              <div className='grid grid-cols-2 gap-4 mt-3'>
+                <InputField id='first_name' name='first_name' label='First Name' type='text' error={``} />
+                <InputField id='last_name' name='last_name' label='Last Name' type='text' error={``} />
               </div>
 
-              <div className="mt-6">
-                <InputField id='password' name='password' label='Password' type='password' error={``} placeholder='Enter Password' />
+              <div className='grid grid-cols-3 gap-4 mt-3'>
+                <InputField id='email' name='email' label='Email' type='email' error={``} />
+                <InputField id='mobile_number' name='mobile_number' label='Mobile Number' type='number' error={``} />
+                <SelectBox id='gender' name='gender' label='Gender' options={[
+                  { label: 'Male', value: 'male' },
+                  { label: 'Female', value: 'female' }
+                ]} />
               </div>
 
-              <div className="mt-6 flex items-center justify-between">
-                <div className="text-sm leading-5">
-                  <a href="#" className="font-medium text-blue-500 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150">
-                    Forgot your password?
-                  </a>
-                </div>
+              <div className='grid grid-cols-2 gap-4 mt-3'>
+                <InputField id='email' name='email' label='Password' type='password' error={``} />
+                <InputField id='mobile_number' name='mobile_number' label='Confirm Password' type='password' error={``} />
               </div>
 
               <div className="mt-6">
                 <span className="block w-full rounded-md shadow-sm">
-                  <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                    Sign in
-                  </button>
+                  <Button lable='Sign Up' type="submit" id='signUp' customClass='w-full' />
                 </span>
               </div>
             </form>
