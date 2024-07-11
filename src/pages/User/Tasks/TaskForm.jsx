@@ -1,5 +1,6 @@
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Swal from 'sweetalert2'
 import * as z from 'zod';
 import { Button, FileField, InputField, SelectBox, Textarea } from '../../../common/components/Forms/FormFields';
 import { useEffect, useState } from 'react';
@@ -56,7 +57,7 @@ const TaskForm = () => {
       formData.append('task_id', _taskId);
     }
 
-    console.log(formData);
+    // console.log(formData);
 
     try {
       
@@ -64,13 +65,12 @@ const TaskForm = () => {
 
       if (response.status == 200) {
         setLoading(false);
-        alert(result.message);
-
+        await Swal.fire(result.message);
         navigate('/task/list')
 
       } else {
         setLoading(false);
-        alert(result.message);
+        await Swal.fire(result.message);
       }
 
     } catch (error) {
