@@ -15,6 +15,7 @@ const PublicRoute = () => {
             <Route path='/dashboard' element={<UserDashboard />} />
             <Route path='/task/list' element={<TaskList />} />
             <Route path='/task/form' element={<TaskForm />} />
+            <Route path='/task/form/:_taskId' element={<TaskForm />} />
             <Route path='/task/Logs' element={<TaskReport />} />
             <Route path="*" element={<Page404 />} />
           </Route>

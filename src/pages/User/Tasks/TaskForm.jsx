@@ -5,16 +5,14 @@ import { Button, FileField, InputField, SelectBox, Textarea } from '../../../com
 import { useEffect, useState } from 'react';
 import Loader from '../../../common/components/Layout/Loader';
 import { postRequest } from '../../../common/helper/postRequest';
+import { useNavigate, useParams } from 'react-router-dom';
 
 // Zod schema for form validation
 const taskSchema = z.object({
   title: z.string().min(1, { message: 'Task Title is required' }),
   category: z.string().min(1, { message: 'Task Type is required' }),
   description: z.string().optional(),
-  attachment: z.union([
-    z.instanceof(File),
-    z.string()
-  ]).refine(file => {
+  attachment: z.any().optional().refine(file => {
     if (!file) return true; // No file is allowed
     const fileType = file.type;
     const allowedTypes = ["image/jpeg", "image/png", "image/gif", "application/pdf", "text/csv", "text/plain"];
@@ -22,11 +20,16 @@ const taskSchema = z.object({
   }, { message: 'Only images (jpg, png, gif), PDF, CSV, or TXT files are allowed' })
 });
 
-// const _taskID = 0;
-
 const TaskForm = () => {
 
+  const { _taskId } = useParams();
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState({
+    type: null,
+    url: null
+  });
 
   const { control, handleSubmit, formState: { errors }, setValue } = useForm({
     resolver: zodResolver(taskSchema),
@@ -39,21 +42,31 @@ const TaskForm = () => {
   });
 
   const onSubmit = async (data) => {
+    console.log("called");
     setLoading(true);
 
     const formData = new FormData();
     formData.append('title', data.title);
-    formData.append('category', data.category);
+    formData.append('category_id', data.category);
     formData.append('description', data.description);
-    formData.append('attachment', data.attachment);
+    if (data.attachment) {
+      formData.append('attachment', data.attachment);
+    }
+    if (_taskId) {
+      formData.append('task_id', _taskId);
+    }
+
+    console.log(formData);
 
     try {
-
-      const { response, result } = await postRequest('/task/api/add', formData);
+      
+      const { response, result } = await postRequest(`/task/api/${ (!_taskId)? 'add' : 'edit'}`, formData);
 
       if (response.status == 200) {
         setLoading(false);
         alert(result.message);
+
+        navigate('/task/list')
 
       } else {
         setLoading(false);
@@ -66,14 +79,41 @@ const TaskForm = () => {
     }
   };
 
+  const fetchData = async () => {
+    if (_taskId) {
+      try {
+        const { response, result } = await postRequest(`/task/api/getTasks/${_taskId}`);
+
+        if (response.status === 200) {
+          setValue("title", result.data.title);
+          setValue("category", result.data.category_id);
+          setValue("description", result.data.description);
+          if (result.data?.attachments.length != 0) {
+            setFile({
+              type: (['image/gif', 'image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml'].includes(result.data.attachments[0].file_type)) ? 'image' : 'file',
+              url: result.data.attachments[0].path
+            })
+          }
+
+          // setValue("attachment", result.data.attachment[0].path);
+        } else {
+          navigate('/task/list')
+          console.log(result);
+        }
+
+      } catch (error) {
+        console.log(error);
+        navigate('/task/list')
+
+      }
+    }
+  }
+
   useEffect(() => {
-    // if(0){
-    // setValue("title", "Task Title 1");
-    //   setValue("category", "Category 1");
-    //   setValue("description", "Task Description");
-    //   setValue("attachment", null); // Reset file input field
-    // }
-  }, [setValue,/* _taskID */])
+    if (_taskId) {
+      fetchData();
+    }
+  }, [setValue, _taskId])
 
   return (
     <>
@@ -143,19 +183,19 @@ const TaskForm = () => {
                 onChange={(e) => {
                   field.onChange(e.target.files[0]);
                 }}
-                previewsrc=""
+                previewsrc={file}
                 error={errors.attachment?.message}
               />
             )}
           />
 
           <div className="flex justify-end">
-            <Button id="submit" lable="Submit" type="submit" label="Submit" />
+            <Button id="submit" lable={ _taskId? 'Update' : 'Submit' } type="submit" label="Submit" />
           </div>
         </form>
       </div>
     </>
-  );
+  );  
 };
 
 export default TaskForm;

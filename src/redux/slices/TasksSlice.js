@@ -9,7 +9,7 @@ export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async () => {
 
 const taskSlice = createSlice({
   name: 'tasks',
-  // immer : false,
+  immer : false,
   initialState: {
     task: {
       data: [],

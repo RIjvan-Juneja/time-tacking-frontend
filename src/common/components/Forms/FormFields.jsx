@@ -108,7 +108,10 @@ export const MultiCheckBox = React.memo(({ value, id, label, isChecked, name, on
 })
 
 export const FileField = ({ id, name, label, error, onChange, previewsrc }) => {
-  const [file, setFile] = useState();
+  const [file, setFile] = useState({
+    type : null,
+    url : null,
+  });
   const previewTypes = [ 'image/gif', 'image/jpeg', 'image/jpg', 'image/png' , 'image/svg+xml' ]
 
   function handleChange(e) {
@@ -116,7 +119,10 @@ export const FileField = ({ id, name, label, error, onChange, previewsrc }) => {
     console.log(e.target.files[0].type);
 
     if(previewTypes.includes(e.target.files[0].type)){
-      setFile(URL.createObjectURL(e.target.files[0]));
+      setFile({
+        type : 'image',
+        url : URL.createObjectURL(e.target.files[0])
+      });
     }
 
     if(onChange) onChange(e);
@@ -131,7 +137,8 @@ export const FileField = ({ id, name, label, error, onChange, previewsrc }) => {
       <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor={id}>{label}</label>
       <input className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200" name={name} aria-describedby="user_avatar_help" id={id} type="file" onChange={handleChange} />
       <p className={`text-red-500 text-sm mt-1 ${error ? ' ' : 'invisible'}`}>{(error) ? error : "."}</p>
-      <img className='mt-7 w-[350px]' src={file} />
+      {(file?.type == 'image') && (<img className='mt-7 w-[350px]' src={file.url} />) }
+      {(file?.type == 'file') && ( <a  href={file.url} download> download File </a>)}
     </>
   )
 }
