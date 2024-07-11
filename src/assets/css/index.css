@@ -1,6 +1,11 @@
 /* Google Fonts Import Link */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 * {
   margin: 0;
   padding: 0;
@@ -136,9 +141,13 @@
   color: #fff !important;
 }
 
-.active-tab{
-  background: #1d1b31;
+.active-tab span{
+  color: #fff !important;
+}
 
+.active-tab{
+  border-radius: 7px !important;
+  background: #1d1b31;
 }
 
 
