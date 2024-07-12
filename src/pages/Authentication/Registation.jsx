@@ -48,7 +48,7 @@ const Registation = () => {
           </h2>
           <p className="mt-2 text-center text-sm leading-5 text-blue-500 max-w">
             <Link to='/login' className="font-medium text-blue-500 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150">
-              Alredy have account ?
+              already have account ?
             </Link>
           </p>
         </div>
