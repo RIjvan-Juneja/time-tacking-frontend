@@ -8,12 +8,11 @@ import { Link } from 'react-router-dom';
 const taskSchema = z.object({
   first_name: z.string().min(1, { message: 'First name is required' }),
   last_name: z.string().min(1, { message: 'Last name is required' }),
-  email: z.string().email({ message: 'Invalid email format' }),
+  email: z.string().min(1, { message: 'Email name is required' }).email({ message: 'Invalid email format' }),
   gender: z.string().min(1, { message: 'Gender is required' }),
   mobile_number: z.string().min(10, { message: 'Mobile number should be 10 digits' }).max(10, { message: 'Mobile number should be 10 digits' }).regex(new RegExp(/^[0-9]+$/), 'Please Enter Only Number'),
   password: z.string().min(5, { message: 'Password should be at least 5 characters long' }),
   confirm_password: z.string().min(5, { message: 'Password should be at least 5 characters long' }),
-  // confirm_password: z.string().refine((value, ctx) => value === ctx.parent.password, { message: 'Passwords do not match' }),
 }).refine((data) => data.password == data.confirm_password, {
   message: "Passwords don't match",
   path: ["confirm_password"], // path of error

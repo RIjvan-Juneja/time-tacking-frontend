@@ -9,12 +9,8 @@ const useFetch = () => {
     setError(null);
 
     try {
-      const response = await fetch(url, options);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}${url}`, options);
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
-      }
 
       setLoading(false);
       return data;
@@ -25,21 +21,19 @@ const useFetch = () => {
     }
   }, []);
 
-  const sendData = useCallback(async (url, formData, options = {}) => {
+  const sendData = useCallback(async (url, payload, options = {}) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(url, {
+      console.log(`${import.meta.env.VITE_API_URL}${url}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}${url}`, {
         method: 'POST',
-        body: formData,
+        body: payload,
         ...options,
       });
-      const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
-      }
+      const data = await response.json();
 
       setLoading(false);
       return data;
