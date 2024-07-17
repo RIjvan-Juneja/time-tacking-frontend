@@ -14,7 +14,6 @@ const userSlice = createSlice({
       state.role = null;
     },
     loginSuccess: (state, action) => {
-      console.log(action.payload);
       state.token = action.payload.token;
       state.name = action.payload.name;
       state.role = action.payload.role;

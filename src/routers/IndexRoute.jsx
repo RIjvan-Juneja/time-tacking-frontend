@@ -68,8 +68,8 @@ const router = createBrowserRouter([
 ]);
 
 
-const NewR = () => {
+const IndexRoute = () => {
   return <RouterProvider router={router} />;
 }
 
-export default NewR
+export default IndexRoute

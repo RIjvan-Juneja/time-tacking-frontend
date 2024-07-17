@@ -8,7 +8,6 @@ const ProtectedWrapper = ({ role }) => {
   try {
     const getRole = useSelector((state) => state.user.role)
 
-
     console.log(role,getRole);
 
     if (!getRole) {
