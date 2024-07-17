@@ -16,12 +16,23 @@ const Sidebar = ({ toggleMenu }) => {
         <ul className="nav-links">
 
           {role === 'admin' && (
-            <li>
-              <NavLink to="/admin/dashboard" className={({ isActive }) => `${isActive && 'active-tab'}`}>
-                <i className='bx bx-grid-alt'></i>
-                <span className="link_name">Dashboard</span>
-              </NavLink>
-            </li>)}
+            <>
+              <li>
+                <NavLink to="/admin/dashboard" className={({ isActive }) => `${isActive && 'active-tab'}`}>
+                  <i className='bx bx-grid-alt'></i>
+                  <span className="link_name">Dashboard</span>
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink to="/admin/userlist" className={({ isActive }) => `${isActive && 'active-tab'}`}>
+                  <i className='bx bx-grid-alt'></i>
+                  <span className="link_name">Users</span>
+                </NavLink>
+              </li>
+              
+            </>
+          )}
 
           {role === 'user' && (
             <>

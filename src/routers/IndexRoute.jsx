@@ -9,6 +9,7 @@ import Login from "../pages/Authentication/Login";
 import Registation from "../pages/Authentication/Registation";
 import AdminDashboard from "../pages/User/Dashboard/AdminDashboard";
 import Page404 from "../common/components/Layout/Page404";
+import Users from "../pages/User/UserData/Users";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/dashboard",
         element: <AdminDashboard />,
+      },
+      {
+        path: "/admin/userlist",
+        element: <Users />,
       }
     ]
   },
