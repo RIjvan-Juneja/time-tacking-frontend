@@ -50,8 +50,6 @@ const useFetch = () => {
 export default useFetch;
 
 
-// Usage Example
-
 
 // const ExampleComponent = () => {
 //   const { loading, error, fetchData, sendData } = useFetch();

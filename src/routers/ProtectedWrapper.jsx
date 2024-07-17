@@ -14,6 +14,8 @@ const ProtectedWrapper = ({ role }) => {
       return <Navigate to="/login" />;
     }
 
+    console.log(role[0],getRole , role[0] !== getRole )
+
     if (role[0] !== getRole) {
       return <Navigate to="/pageNotFound" />;
     }
