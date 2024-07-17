@@ -5,8 +5,9 @@ import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useFetch from "../../hooks/useFetch";
 import { useState } from "react";
-import { set } from "date-fns/fp/set";
 import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../redux/slices/UserSlice";
 
 const loginSchema = z.object({
   email: z.string().min(1, { message: 'Email is required' }).email({ message: 'Invalid email format' }),
@@ -14,6 +15,8 @@ const loginSchema = z.object({
 })
 
 const Login = () => {
+
+  const dispatch = useDispatch();
 
   const { loading, error, fetchData, sendData } = useFetch();
   const navigate = useNavigate();
@@ -41,7 +44,15 @@ const Login = () => {
       } else {
         setUnauthorized(false)
         localStorage.setItem('token', response.data)
-        navigate('/task/list')
+        dispatch(loginSuccess(response.data));             
+
+        // Redirect to dashboard
+        if(response.data.role === 'admin'){
+          navigate('/admin/dashboard')
+        } else {
+          navigate('/user/task/list')
+        }
+
       }
     } catch (error) {
       Swal.fire({

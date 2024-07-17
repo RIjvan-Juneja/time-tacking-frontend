@@ -89,7 +89,7 @@ const TaskList = () => {
       Header: 'Action', accessor: 'action',
       Cell: (_, row) => (
         <>
-          <button type='button' onClick={() => navigate(`/task/form/${row.id}`)} className="font-medium ml-2 text-red-600 dark:text-red-500 hover:underline">
+          <button type='button' onClick={() => navigate(`/user/task/form/${row.id}`)} className="font-medium ml-2 text-red-600 dark:text-red-500 hover:underline">
             edit
           </button>
           <button type='button' onClick={() => handleDeleteTask(row.id)} className="font-medium ml-2 text-red-600 dark:text-red-500 hover:underline">

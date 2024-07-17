@@ -67,7 +67,7 @@ const TaskForm = () => {
       if (response.status == 200) {
         setLoading(false);
         await Swal.fire(result.message);
-        navigate('/task/list')
+        navigate('/user/task/list')
 
       } else {
         setLoading(false);
@@ -98,13 +98,13 @@ const TaskForm = () => {
 
           // setValue("attachment", result.data.attachment[0].path);
         } else {
-          navigate('/task/list')
+          navigate('/user/task/list')
           console.log(result);
         }
 
       } catch (error) {
         console.log(error);
-        navigate('/task/list')
+        navigate('/user/task/list')
 
       }
     }

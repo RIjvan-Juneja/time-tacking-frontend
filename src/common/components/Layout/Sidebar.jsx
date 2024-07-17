@@ -10,25 +10,25 @@ const Sidebar = ({ toggleMenu }) => {
         </div>
         <ul className="nav-links">
           <li>
-            <NavLink to="/dashboard" className={({ isActive }) => `${isActive && 'active-tab'}`}>
+            <NavLink to="/user/dashboard" className={({ isActive }) => `${isActive && 'active-tab'}`}>
               <i className='bx bx-grid-alt'></i>
               <span className="link_name">Dashboard</span>
             </NavLink>
           </li>
           <li className='mt-10'>
-            <NavLink to="/task/list" className={({ isActive }) => `${isActive && 'active-tab'}`}>
+            <NavLink to="/user/task/list" className={({ isActive }) => `${isActive && 'active-tab'}`}>
               <i className='bx bx-grid-alt'></i>
               <span className="link_name">Tasks List</span>
             </NavLink>
           </li>
           <li className='mt-10'>
-            <NavLink to="/task/form" className={({ isActive }) => `${isActive && 'active-tab'}`}>
+            <NavLink to="/user/task/form" className={({ isActive }) => `${isActive && 'active-tab'}`}>
               <i className='bx bx-grid-alt'></i>
               <span className="link_name">Tasks Form</span>
             </NavLink>
           </li>
           <li className='mt-10'>
-            <NavLink to="/task/Logs" className={({ isActive }) => `${isActive && 'active-tab'}`}>
+            <NavLink to="/user/task/Logs" className={({ isActive }) => `${isActive && 'active-tab'}`}>
               <i className='bx bx-grid-alt'></i>
               <span className="link_name">Tasks Report</span>
             </NavLink>

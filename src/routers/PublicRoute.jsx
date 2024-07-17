@@ -7,7 +7,7 @@ import TaskForm from '../pages/User/Tasks/TaskForm'
 import TaskReport from '../pages/User/Tasks/TaskReport'
 import Login from '../pages/Authentication/Login'
 import Registation from '../pages/Authentication/Registation'
-import ProtectedRoute from './ProtectedRoute'
+import ProtectedRoute from './ProtectedWrapper'
 
 
 const PublicRoute = () => {
