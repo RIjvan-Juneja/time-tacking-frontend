@@ -7,25 +7,26 @@ import TaskForm from '../pages/User/Tasks/TaskForm'
 import TaskReport from '../pages/User/Tasks/TaskReport'
 import Login from '../pages/Authentication/Login'
 import Registation from '../pages/Authentication/Registation'
+import ProtectedRoute from './ProtectedRoute'
+
 
 const PublicRoute = () => {
   return (
     <>
+
       <BrowserRouter>
         <Routes>
-          
           <Route path="/" element={<Layout />}>
-            <Route path='/dashboard' element={<UserDashboard />} />
+            <Route path='/dashboard' element={<ProtectedRoute role={['user']}>  <UserDashboard /> </ProtectedRoute>} />
             <Route path='/task/list' element={<TaskList />} />
             <Route path='/task/form' element={<TaskForm />} />
             <Route path='/task/form/:_taskId' element={<TaskForm />} />
             <Route path='/task/Logs' element={<TaskReport />} />
-            <Route path="*" element={<Page404 />} />
           </Route>
 
           <Route path='/login' element={<Login />} />
           <Route path='/registation' element={<Registation />} />
-          
+          <Route path="*" element={<Page404 />} />
         </Routes>
       </BrowserRouter>
     </>

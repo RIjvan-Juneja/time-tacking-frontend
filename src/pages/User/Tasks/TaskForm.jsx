@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import Loader from '../../../common/components/Layout/Loader';
 import { postRequest } from '../../../common/helper/postRequest';
 import { useNavigate, useParams } from 'react-router-dom';
+import { TASK_CATEGORY } from '../../../common/utils/constants';
 
 // Zod schema for form validation
 const taskSchema = z.object({
@@ -148,11 +149,7 @@ const TaskForm = () => {
                 label="Task Type *"
                 ref={null}
 
-                options={[
-                  { value: 1, label: "Category 1" },
-                  { value: 2, label: "Category 2" },
-                  { value: 3, label: "Category 3" },
-                ]}
+                options={TASK_CATEGORY}
                 error={errors.category?.message}
               />
             )}

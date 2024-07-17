@@ -3,6 +3,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, InputField, SelectBox } from '../../common/components/Forms/FormFields'
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import useFetch from '../../hooks/useFetch';
+import Loader from '../../common/components/Layout/Loader'
 
 // Zod schema for form validation
 const taskSchema = z.object({
@@ -20,7 +23,9 @@ const taskSchema = z.object({
 
 const Registation = () => {
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const { loading, sendData } = useFetch();
+
+  const { control, handleSubmit, formState: { errors }, setValue } = useForm({
     resolver: zodResolver(taskSchema),
     defaultValues: {
       first_name: '',
@@ -34,11 +39,46 @@ const Registation = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
+    try {
+      const response = await sendData('/auth/api/registation', JSON.stringify(data), {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+
+      if (response.response_type !== 'success') {
+        Swal.fire({
+          title: "Unexpected Error",
+          text: response.message,
+          icon: "warning"
+        });
+      } else {
+        Swal.fire({
+          title: "Welcome",
+          text: response.message,
+          icon: "success"
+        });
+        setValue('first_name', '')
+        setValue('last_name', '')
+        setValue('email', '')
+        setValue('gender', '')
+        setValue('mobile_number', '')
+        setValue('password', '')
+        setValue('confirm_password', '')
+      }
+
+    } catch (error) {
+      Swal.fire({
+        title: "Unexpected Error",
+        text: error,
+        icon: "error"
+      });
+    }
   }
 
   return (
     <>
+    { loading &&  <Loader/>}
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img className="mx-auto h-10 w-auto" src="https://www.svgrepo.com/show/301692/login.svg" alt="Workflow" />
