@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import useFetch from "../../../hooks/useFetch";
 import Chart from 'react-apexcharts';
 import { format } from 'date-fns';
+import ReactApexChart from "react-apexcharts";
 
 const AdminDashboard = () => {
 
@@ -43,19 +44,33 @@ const AdminDashboard = () => {
 
   const months = dashboard.userStats.map(stat => format(new Date(stat.month), 'MMMM'));
   const userCounts = dashboard.userStats.map(stat => stat.userCount);
+
   const chartOptions = {
     chart: {
-      type: 'bar',
+      type: 'line',
       height: 350,
     },
     plotOptions: {
       bar: {
         borderRadius: 4,
-        horizontal: false,
+        // horizontal: true,
       },
     },
     dataLabels: {
-      enabled: false,
+      enabled: true,
+    },
+    stroke: {
+      curve: 'straight'
+    },
+    title: {
+      text: 'Register users',
+      align: 'left'
+    },
+    grid: {
+      row: {
+        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+        opacity: 0.5
+      },
     },
     xaxis: {
       categories: months,
@@ -96,7 +111,6 @@ const AdminDashboard = () => {
 
             <div className="rounded-full border-dashed border-2 border-indigo-600 flex justify-center items-center h-[75px] w-[75px]"> <i className='bx bx-no-signal text-4xl'></i></div>
             <div>
-
               <h4 className='ml-5'>Unactive Users</h4>
               <span className='ml-5 text-4xl'>  {dashboard.totalUsers - dashboard.activeUsers}  </span>
             </div>
@@ -108,7 +122,7 @@ const AdminDashboard = () => {
         <div className="">
           <div className='mt-14 p-4 shadow-md '>
             <h2>User Statistics</h2>
-            <Chart options={chartOptions} series={series} type="bar" height={350} />
+            <ReactApexChart options={chartOptions} series={series} type="bar" height={350} />
           </div>
         </div>
 
