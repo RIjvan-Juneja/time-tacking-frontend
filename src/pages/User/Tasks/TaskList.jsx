@@ -7,6 +7,7 @@ import { filterTasksByCategory } from '../../../redux/slices/TasksSlice';
 import Swal from 'sweetalert2'
 import TaskDetails from "./TaskDetails";
 import useFetch from "../../../hooks/useFetch";
+import { logout } from "../../../redux/slices/UserSlice";
 
 
 const TaskList = () => {
@@ -58,6 +59,8 @@ const TaskList = () => {
           icon: "success"
         });
         dispatch(fetchTasks());
+      }else if(response.response_type === 'unauthorized'){
+        dispatch(logout());
       } else {
         Swal.fire({
           icon: "error",

@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react"
 import DynamicTable from "../../../common/components/Tables/DynamicTable";
 import useFetch from "../../../hooks/useFetch";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/slices/UserSlice";
 
 const TaskReport = () => {
   const [data, setData] = useState([]);
   const { sendData } = useFetch();
-
+  const dispatch = useDispatch();
   const columns = [
     { Header: 'Id', accessor: 'id' },
     { Header: 'Task Type', accessor: 'category_name' },
@@ -23,6 +25,8 @@ const TaskReport = () => {
 
     if (response.response_type === 'success') {
       setData(response.data)
+    }else if(response.response_type === 'unauthorized'){
+      dispatch(logout());
     } else {
       console.log(response.message);
     }

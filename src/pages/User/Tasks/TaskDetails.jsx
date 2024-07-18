@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { format } from "date-fns";
 import { Button } from '../../../common/components/Forms/FormFields';
 import useFetch from '../../../hooks/useFetch';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../redux/slices/UserSlice';
 
 const InfoTime = ({ customClass, time, lable }) => {
   return (
@@ -23,7 +25,7 @@ const TaskDetails = ({ data }) => {
   const [lastLog, setLastLog] = useState(true)
   const [logData, setLogData] = useState([])
   const { sendData } = useFetch();
-
+  const dispatch = useDispatch();
 
   const FetchLogData = async () => {
     try {
@@ -32,6 +34,9 @@ const TaskDetails = ({ data }) => {
       if (response.response_type === 'success') {
         setLogData(response.data);
         setLastLog(!response.data.some(obj => obj.end_datetime === null));
+      }   
+      if(response.response_type === 'unauthorized'){
+        dispatch(logout());
       }
 
     } catch (error) {

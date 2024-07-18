@@ -1,10 +1,23 @@
 // src/features/task/taskSlice.js
 import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
-import { postRequest } from '../../common/helper/postRequest'; // Adjust the path to where your function is located
+// import { postRequest } from '../../common/helper/postRequest'; // Adjust the path to where your function is located
 
-export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async () => {
-  const { result } = await postRequest('/task/api/getTasks');
+export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (args,{ getState }) => {
+
+  const state = getState();
+  const token = state.user.token;
+
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/task/api/getTasks`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+    credentials: 'include'
+  })
+
+  const result = await response.json();
   return result;
+
 });
 
 const taskSlice = createSlice({

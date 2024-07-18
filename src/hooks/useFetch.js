@@ -1,15 +1,19 @@
 import { useState, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 
 const useFetch = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const token = useSelector((state) => state.user.token);
 
   const fetchData = useCallback(async (url, options = {}) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}${url}`, options);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}${url}`,
+        ...options
+      );
       const data = await response.json();
 
       setLoading(false);
@@ -26,11 +30,15 @@ const useFetch = () => {
     setError(null);
 
     try {
-      console.log(`${import.meta.env.VITE_API_URL}${url}`);
+
       const response = await fetch(`${import.meta.env.VITE_API_URL}${url}`, {
         method: 'POST',
         body: payload,
-        ...options,
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          ...(options.hasOwnProperty('headers') && { ...options.headers })
+        },
       });
 
       const data = await response.json();
@@ -48,48 +56,3 @@ const useFetch = () => {
 };
 
 export default useFetch;
-
-
-
-// const ExampleComponent = () => {
-//   const { loading, error, fetchData, sendData } = useFetch();
-//   const [data, setData] = useState(null);
-
-//   useEffect(() => {
-//     const loadData = async () => {
-//       try {
-//         const fetchedData = await fetchData('/api/data');
-//         setData(fetchedData);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     };
-
-//     loadData();
-//   }, [fetchData]);
-
-//   const handleSubmit = async (event) => {
-//     event.preventDefault();
-//     const formData = new FormData(event.target);
-
-//     try {
-//       const response = await sendData('/api/submit', formData);
-//       console.log('Form submitted successfully:', response);
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       {loading && <p>Loading...</p>}
-//       {error && <p>Error: {error}</p>}
-//       {data && <div>Data: {JSON.stringify(data)}</div>}
-
-//       <form onSubmit={handleSubmit}>
-//         <input type="text" name="example" />
-//         <button type="submit">Submit</button>
-//       </form>
-//     </div>
-//   );
-// };

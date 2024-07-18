@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchTasks } from '../../../redux/slices/TasksSlice';
-import Spinner from '../../../common/components/Layout/Spinner';
 import Chart from 'react-apexcharts';
 import useFetch from '../../../hooks/useFetch';
 import { format, subMonths } from 'date-fns';
 import CounterCard from './components/CounterCard';
+import { logout } from '../../../redux/slices/UserSlice';
 
 
 const UserDashboard = () => {
@@ -15,8 +15,6 @@ const UserDashboard = () => {
     monthlyProgress: { thisMonthTasks: 0, lastMonthTasks: 0 },
   })
 
-
-
   const tasks = useSelector((state) => state.tasks.task);
   const dispatch = useDispatch();
   const { sendData } = useFetch();
@@ -25,6 +23,9 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchComparisonData = async () => {
       const response = await sendData('/task/api/daycompare');
+      if(response.response_type === 'unauthorized'){
+        dispatch(logout());
+      }
       setDashboard((prevState) => {
         return { ...prevState, comparisonData: { ...prevState.comparisonData, ...response.data } }
       })

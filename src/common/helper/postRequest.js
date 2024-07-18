@@ -1,9 +1,13 @@
-export const postRequest = async (url, payload = {}, header = {}, isStringfiy = false) => {
+import { useSelector } from "react-redux";
+
+export const postRequest = async (url, payload = {},  ,header = {}, isStringfiy = false) => {
   try {
     console.log(`${import.meta.env.VITE_API_URL}${url}`);
     const response = await fetch(`${import.meta.env.VITE_API_URL}${url}`, {
       method: 'POST',
-      ...header,
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
       body: isStringfiy? JSON.stringify(payload) : payload,
       credentials: 'include'
     })

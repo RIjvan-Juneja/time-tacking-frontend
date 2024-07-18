@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react"
 import useFetch from "../../../hooks/useFetch";
-import Chart from 'react-apexcharts';
 import { format } from 'date-fns';
 import ReactApexChart from "react-apexcharts";
 import CounterCard from "./components/CounterCard";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/slices/UserSlice";
 
 const AdminDashboard = () => {
+
+  const dispatch = useDispatch();
 
   const { sendData } = useFetch();
 
@@ -18,7 +21,13 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const fetchTotalUsers = async () => {
+    
       const response = await sendData('/users/api/userlist');
+
+      if(response.response_type === 'unauthorized'){
+        dispatch(logout());
+      }
+
       setDashboard((prevState) => {
         return { ...prevState, totalUsers: response.data.length }
       })

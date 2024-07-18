@@ -8,6 +8,8 @@ import Loader from '../../../common/components/Layout/Loader';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TASK_CATEGORY } from '../../../common/utils/constants';
 import useFetch from '../../../hooks/useFetch';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../redux/slices/UserSlice';
 
 // Zod schema for form validation
 const taskSchema = z.object({ 
@@ -25,6 +27,7 @@ const taskSchema = z.object({
 const TaskForm = () => {
 
   const { loading, sendData } = useFetch();
+  const dispatch = useDispatch();
 
   const { _taskId } = useParams();
   const navigate = useNavigate();
@@ -66,6 +69,8 @@ const TaskForm = () => {
       if (response.response_type === 'success') {
         await Swal.fire(response.message);
         navigate('/user/task/list')
+      }else if(response.response_type === 'unauthorized'){
+        dispatch(logout());
       } else {
         await Swal.fire(response.message);
       }

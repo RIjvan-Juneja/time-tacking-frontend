@@ -3,6 +3,8 @@ import DynamicTable from "../../../common/components/Tables/DynamicTable";
 import useFetch from "../../../hooks/useFetch";
 import { format } from "date-fns";
 import Loader from "../../../common/components/Layout/Loader";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/slices/UserSlice";
 
 
 
@@ -10,6 +12,7 @@ const Users = () => {
 
   const { loading, sendData } = useFetch();
   const [users, setUsers] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
 
@@ -17,6 +20,9 @@ const Users = () => {
 
       try {
         const response = await sendData(`/users/api/userlist`);
+        if(response.response_type === 'unauthorized'){
+          dispatch(logout());
+        }
         const formattedUsers = response.data.map(user => ({
           ...user,
           role_name: user.role.role_name,
