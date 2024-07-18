@@ -95,8 +95,8 @@ const UserDashboard = () => {
   return (
     <>
       <div className="mx-9 mt-7 bg-white p-4">
-        <div className="grid grid-cols-3 gap-3">
-          <div className='border h-[130px] p-4 flex justify-center items-center shadow-md'>
+        <div className="grid grid-cols-3 gap-3 mt-8">
+          <div className='border h-[130px] p-4 flex justify-center items-center shadow-md rounded-md'>
             {(tasks.status != 'success') ? <Spinner /> : (<>
               <div className="rounded-full border-dashed border-2 border-indigo-600 flex justify-center items-center h-[75px] w-[75px]"> <i className='bx bx-task text-4xl'></i></div>
               <div>
@@ -106,7 +106,7 @@ const UserDashboard = () => {
             </>)}
           </div>
 
-          <div className='border h-[130px] p-4 flex justify-center items-center shadow-md'>
+          <div className='border h-[130px] p-4 flex justify-center items-center shadow-md rounded-md'>
 
             <div className="rounded-full border-dashed border-2 border-indigo-600 flex justify-center items-center h-[75px] w-[75px]"> <i className='bx bxs-time-five text-4xl'></i></div>
             <div>

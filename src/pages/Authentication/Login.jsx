@@ -18,7 +18,7 @@ const Login = () => {
 
   const dispatch = useDispatch();
 
-  const { loading, error, fetchData, sendData } = useFetch();
+  const { sendData } = useFetch();
   const navigate = useNavigate();
   const [unauthorized, setUnauthorized] = useState(false);
 
@@ -50,7 +50,7 @@ const Login = () => {
         if(response.data.role === 'admin'){
           navigate('/admin/dashboard')
         } else {
-          navigate('/user/task/list')
+          navigate('/user/dashboard')
         }
 
       }

@@ -26,7 +26,7 @@ const Sidebar = ({ toggleMenu }) => {
 
               <li>
                 <NavLink to="/admin/userlist" className={({ isActive }) => `${isActive && 'active-tab'}`}>
-                  <i className='bx bx-grid-alt'></i>
+                  <i className='bx bxs-user-detail' ></i>
                   <span className="link_name">Users</span>
                 </NavLink>
               </li>
@@ -44,19 +44,19 @@ const Sidebar = ({ toggleMenu }) => {
               </li>
               <li className='mt-10'>
                 <NavLink to="/user/task/list" className={({ isActive }) => `${isActive && 'active-tab'}`}>
-                  <i className='bx bx-grid-alt'></i>
+                  <i className='bx bx-list-ul'></i>
                   <span className="link_name">Tasks List</span>
                 </NavLink>
               </li>
               <li className='mt-10'>
                 <NavLink to="/user/task/form" className={({ isActive }) => `${isActive && 'active-tab'}`}>
-                  <i className='bx bx-grid-alt'></i>
+                  <i className='bx bx-list-plus'></i>
                   <span className="link_name">Tasks Form</span>
                 </NavLink>
               </li>
               <li className='mt-10'>
                 <NavLink to="/user/task/Logs" className={({ isActive }) => `${isActive && 'active-tab'}`}>
-                  <i className='bx bx-grid-alt'></i>
+                  <i className='bx bxs-report'></i>
                   <span className="link_name">Tasks Report</span>
                 </NavLink>
               </li>
