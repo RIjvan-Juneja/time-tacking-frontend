@@ -8,8 +8,13 @@ import { format, subMonths } from 'date-fns';
 
 
 const UserDashboard = () => {
-  const [comparisonData, setComparisonData] = useState({ todayTasks: 0, yesterdayTasks: 0 });
-  const [monthlyProgress, setMonthlyProgress] = useState({ thisMonthTasks: 0, lastMonthTasks: 0 });
+  const [dashboard, setDashboard] = useState({
+    runningTask: 0,
+    comparisonData: { todayTasks: 0, yesterdayTasks: 0 },
+    monthlyProgress: { thisMonthTasks: 0, lastMonthTasks: 0 },
+  })
+
+
 
   const tasks = useSelector((state) => state.tasks.task);
   const dispatch = useDispatch();
@@ -19,16 +24,29 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchComparisonData = async () => {
       const response = await sendData('/task/api/daycompare');
-      setComparisonData(response.data);
+      setDashboard((prevState) => {
+        return { ...prevState, comparisonData: { ...prevState.comparisonData, ...response.data } }
+      })
     };
 
     const fetchMonthlyProgress = async () => {
       const response = await sendData('/task/api/monthlyprogress');
-      setMonthlyProgress(response.data);
+      setDashboard((prevState) => {
+        return { ...prevState, monthlyProgress: { ...prevState.monthlyProgress, ...response.data } }
+      })
     };
+
+    const runningTask = async () => {
+      const response = await sendData('/tasklogs/api/runningtask');
+      console.log(response.data);
+      setDashboard((prevState) => {
+        return { ...prevState, runningTask: response.data.length }
+      })
+    }
 
     fetchComparisonData();
     fetchMonthlyProgress();
+    runningTask();
   }, []);
 
   const comparisonChartOptions = {
@@ -39,14 +57,13 @@ const UserDashboard = () => {
     plotOptions: {
       bar: {
         borderRadius: 4,
-        horizontal: true
       }
     },
     dataLabels: {
-      enabled: false
+      enabled: true
     },
     xaxis: {
-      categories: ['Today', 'Yesterday']
+      categories: ['Yesterday', 'Today']
     }
   };
 
@@ -79,7 +96,7 @@ const UserDashboard = () => {
     <>
       <div className="mx-9 mt-7 bg-white p-4">
         <div className="grid grid-cols-3 gap-3">
-          <div className='border h-[100px] p-4 flex justify-center items-center'>
+          <div className='border h-[130px] p-4 flex justify-center items-center shadow-md'>
             {(tasks.status != 'success') ? <Spinner /> : (<>
               <div className="rounded-full border-dashed border-2 border-indigo-600 flex justify-center items-center h-[75px] w-[75px]"> <i className='bx bx-task text-4xl'></i></div>
               <div>
@@ -88,24 +105,34 @@ const UserDashboard = () => {
               </div>
             </>)}
           </div>
+
+          <div className='border h-[130px] p-4 flex justify-center items-center shadow-md'>
+
+            <div className="rounded-full border-dashed border-2 border-indigo-600 flex justify-center items-center h-[75px] w-[75px]"> <i className='bx bxs-time-five text-4xl'></i></div>
+            <div>
+              <h4 className='ml-5'>Total Running Task</h4>
+              <span className='ml-5 text-4xl'> {dashboard.runningTask} </span>
+            </div>
+
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-10">
-          <div className='mt-14 p-4'>
+          <div className='mt-14 p-4 shadow-md '>
             <h2> Today & Yesterday Progress </h2>
             <Chart
               options={comparisonChartOptions}
-              series={[{ data: [comparisonData.todayTasks, comparisonData.yesterdayTasks] }]}
+              series={[{ data: [dashboard.comparisonData.yesterdayTasks, dashboard.comparisonData.todayTasks] }]}
               type="bar"
               height={350}
             />
           </div>
 
-          <div className='mt-14 p-4'>
+          <div className='mt-14 p-4 shadow-md'>
             <h2> Monthly Progress </h2>
             <Chart
               options={monthlyProgressChartOptions}
-              series={[{ data: [monthlyProgress.lastMonthTasks, monthlyProgress.thisMonthTasks] }]}
+              series={[{ data: [dashboard.monthlyProgress.lastMonthTasks, dashboard.monthlyProgress.thisMonthTasks] }]}
               type="line"
               height={350}
             />
