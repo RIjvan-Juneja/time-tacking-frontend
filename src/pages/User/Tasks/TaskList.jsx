@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState } from "react";
 import DynamicTable from "../../../common/components/Tables/DynamicTable";
 import { filterTasksByCategory } from '../../../redux/slices/TasksSlice';
 import Swal from 'sweetalert2'
-import { postRequest } from "../../../common/helper/postRequest";
 import TaskDetails from "./TaskDetails";
 import useFetch from "../../../hooks/useFetch";
 

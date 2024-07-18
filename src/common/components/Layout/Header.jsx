@@ -22,10 +22,10 @@ const Header = ({ toggleMenu, setToggleMenu }) => {
 
   return (
     <>
-      <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700" style={{ padding: "2px 16px" }}>
+      <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700" style={{ padding: "0px 16px" }}>
         <div className="flex flex-wrap items-center justify-between mx-auto p-4">
           <ul className="flex w-full justify-between">
-            <li>
+            <li className="mt-2">
               <i className='bx bx-menu cursor-pointer' onClick={() => setToggleMenu(!toggleMenu)} style={{ fontSize: '35px' }}></i>
             </li>
             <li>

@@ -1,6 +1,7 @@
 // src/features/task/taskSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { postRequest } from '../../common/helper/postRequest'; // Adjust the path to where your function is located
+import useFetch from '../../hooks/useFetch';
 
 export const fetchCategory = createAsyncThunk('tasks/fetchTasks', async () => {
   const { result } = await postRequest('/task/api/getTasks');
@@ -25,6 +26,7 @@ const categorySlice = createSlice({
         state.task.status = 'loading';
       })
       .addCase(fetchCategory.fulfilled, (state, action) => {
+        console.log(action);
         state.task.status = 'success';
         state.task.data = action.payload;
         state.task.error = false;

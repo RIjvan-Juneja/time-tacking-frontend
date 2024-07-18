@@ -1,18 +1,10 @@
-
-
-// {
-//   "id": 2,
-//   "category_name": "work",
-//   "title": "hhhhhhhhhhhhhh",
-//   "totalHours": 19
-// },
-
 import { useEffect, useState } from "react"
 import DynamicTable from "../../../common/components/Tables/DynamicTable";
-import { postRequest } from "../../../common/helper/postRequest";
+import useFetch from "../../../hooks/useFetch";
 
 const TaskReport = () => {
   const [data, setData] = useState([]);
+  const { sendData } = useFetch();
 
   const columns = [
     { Header: 'Id', accessor: 'id' },
@@ -22,17 +14,17 @@ const TaskReport = () => {
   ]
 
   const fetchReportData = async (reportType) => {
-    const { response, result } = await postRequest(`/tasklogs/api/report`, { reportType }, {
+
+    const response = await sendData(`/tasklogs/api/report`, JSON.stringify({ reportType }), {
       headers: {
         "Content-Type": "application/json",
       }
-    }, true)
+    })
 
-    if(response.status === 200) {
-      console.log("get data");
-      setData(result.data)
+    if (response.response_type === 'success') {
+      setData(response.data)
     } else {
-      console.log(result);
+      console.log(response.message);
     }
   }
 

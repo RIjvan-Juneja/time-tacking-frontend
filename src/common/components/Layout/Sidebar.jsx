@@ -9,7 +9,7 @@ const Sidebar = ({ toggleMenu }) => {
   return (
     <>
       <div className={`sidebar ${!toggleMenu && 'close'}`} style={{ boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}>
-        <div className="logo-details" style={{ borderBottom: '2px solid #11101d26', minHeight: '77px' }}>
+        <div className="logo-details" style={{ borderBottom: '2px solid #11101d26', minHeight: '79px' }}>
           <i className='bx bxs-timer'></i>
           <span className="logo_name">Time Tracking</span>
         </div>
