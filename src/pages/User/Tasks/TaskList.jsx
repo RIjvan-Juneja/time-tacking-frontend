@@ -7,10 +7,12 @@ import { filterTasksByCategory } from '../../../redux/slices/TasksSlice';
 import Swal from 'sweetalert2'
 import { postRequest } from "../../../common/helper/postRequest";
 import TaskDetails from "./TaskDetails";
+import useFetch from "../../../hooks/useFetch";
 
 
 const TaskList = () => {
 
+  const { sendData } = useFetch();
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks.task);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -19,8 +21,7 @@ const TaskList = () => {
 
   const viewSelectedTask = useCallback((_id) => {
     setSelectedTask(tasks.filteredData.find((task) => task.id === _id));
-  },[tasks.filteredData])
-  // console.log(tasks.filteredData);
+  }, [tasks.filteredData])
 
   useEffect(() => {
     if (tasks.status === 'idle') {
@@ -36,10 +37,6 @@ const TaskList = () => {
     return <div>Error: {tasks.error}</div>;
   }
 
-  // const deleteRequest = async (id) => {
-
-  // }
-
   const handleDeleteTask = async (_id) => {
     const swals = await Swal.fire({
       title: "Are you sure?",
@@ -50,15 +47,15 @@ const TaskList = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!"
     })
-    // console.log(swals);
+
     if (swals.isConfirmed) {
 
-      const { response, result } = await postRequest(`/task/api/delete/${_id}`);
-      console.log(result);
-      if (response.status === 200) {
+      const response = await sendData(`/task/api/delete/${_id}`);
+      console.log(response);
+      if (response.response_type === 'deleted') {
         Swal.fire({
           title: "Deleted!",
-          text: "Your file has been deleted.",
+          text: "Your task has been deleted.",
           icon: "success"
         });
         dispatch(fetchTasks());
@@ -68,8 +65,9 @@ const TaskList = () => {
           title: "Oops...",
           text: "Something went wrong!",
         });
-        console.log(result.message);
+        console.log(response.message);
       }
+
     }
   }
 
@@ -89,14 +87,14 @@ const TaskList = () => {
       Header: 'Action', accessor: 'action',
       Cell: (_, row) => (
         <>
-          <button type='button' onClick={() => navigate(`/user/task/form/${row.id}`)} className="font-medium ml-2 text-red-600 dark:text-red-500 hover:underline">
-            edit
+          <button type='button' onClick={() => navigate(`/user/task/form/${row.id}`)} className="font-medium ml-2 mr-4 text-green-600 dark:text-red-500 hover:underline">
+            <i className='bx bxs-edit text-xl'></i>
           </button>
-          <button type='button' onClick={() => handleDeleteTask(row.id)} className="font-medium ml-2 text-red-600 dark:text-red-500 hover:underline">
-            delete
+          <button type='button' onClick={() => handleDeleteTask(row.id)} className="font-medium ml-2 text-red-600 mr-4 dark:text-red-500 hover:underline">
+            <i className='bx bxs-trash-alt text-xl'></i>
           </button>
-          <button type='button' onClick={() => viewSelectedTask(row.id)} className="font-medium ml-2 text-red-600 dark:text-red-500 hover:underline">
-            view
+          <button type='button' onClick={() => viewSelectedTask(row.id)} className="font-medium ml-2 text-cyan-600 dark:text-red-500 hover:underline">
+            <i className='bx bxs-binoculars text-xl'></i>
           </button>
         </>
       )
@@ -126,7 +124,7 @@ const TaskList = () => {
             </select>
             <DynamicTable columns={columns} data={tasks.filteredData} />
           </div>
-          <div className="w-[480px] h-auto shadow-md p-5"> 
+          <div className="w-[480px] h-auto shadow-md p-5">
             <TaskDetails data={selectedTask} />
           </div>
         </div>

@@ -5,6 +5,7 @@ import Spinner from '../../../common/components/Layout/Spinner';
 import Chart from 'react-apexcharts';
 import useFetch from '../../../hooks/useFetch';
 import { format, subMonths } from 'date-fns';
+import CounterCard from './components/CounterCard';
 
 
 const UserDashboard = () => {
@@ -18,7 +19,7 @@ const UserDashboard = () => {
 
   const tasks = useSelector((state) => state.tasks.task);
   const dispatch = useDispatch();
-  const { loading, sendData } = useFetch();
+  const { sendData } = useFetch();
 
 
   useEffect(() => {
@@ -96,25 +97,8 @@ const UserDashboard = () => {
     <>
       <div className="mx-9 mt-7 bg-white p-4">
         <div className="grid grid-cols-3 gap-3 mt-8">
-          <div className='border h-[130px] p-4 flex justify-center items-center shadow-md rounded-md'>
-            {(tasks.status != 'success') ? <Spinner /> : (<>
-              <div className="rounded-full border-dashed border-2 border-indigo-600 flex justify-center items-center h-[75px] w-[75px]"> <i className='bx bx-task text-4xl'></i></div>
-              <div>
-                <h4 className='ml-5'>Total Tasks</h4>
-                <span className='ml-5 text-4xl'> {tasks.data.data.length} </span>
-              </div>
-            </>)}
-          </div>
-
-          <div className='border h-[130px] p-4 flex justify-center items-center shadow-md rounded-md'>
-
-            <div className="rounded-full border-dashed border-2 border-indigo-600 flex justify-center items-center h-[75px] w-[75px]"> <i className='bx bxs-time-five text-4xl'></i></div>
-            <div>
-              <h4 className='ml-5'>Total Running Task</h4>
-              <span className='ml-5 text-4xl'> {dashboard.runningTask} </span>
-            </div>
-
-          </div>
+          {(tasks.status === 'success') && <CounterCard icon={<i className='bx bx-task text-4xl'></i>} title='Total Tasks' data={tasks.data.data.length} />}
+          <CounterCard icon={<i className='bx bxs-time-five text-4xl'></i>} title='Total Running Task' data={dashboard.runningTask} />
         </div>
 
         <div className="grid grid-cols-2 gap-10">
@@ -138,8 +122,6 @@ const UserDashboard = () => {
             />
           </div>
         </div>
-
-
 
       </div>
     </>

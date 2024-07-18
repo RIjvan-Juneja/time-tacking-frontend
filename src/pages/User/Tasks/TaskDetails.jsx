@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { compareAsc, format } from "date-fns";
+import { useEffect, useState } from 'react'
+import { format } from "date-fns";
 import { Button } from '../../../common/components/Forms/FormFields';
-import { postRequest } from '../../../common/helper/postRequest';
+import useFetch from '../../../hooks/useFetch';
 
 const InfoTime = ({ customClass, time, lable }) => {
   return (
@@ -22,20 +22,16 @@ const TaskDetails = ({ data }) => {
 
   const [lastLog, setLastLog] = useState(true)
   const [logData, setLogData] = useState([])
+  const { sendData } = useFetch();
+
 
   const FetchLogData = async () => {
     try {
-      // const { response, result } = postRequest(`/tasklogs/api/logs/${data.id}`)
-      // console.log(response,result,"new");
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/tasklogs/api/logs/${data.id}`, {
-        method: 'POST',
-      });
-      const result = await response.json();
-      if (response.status === 200) {
-        console.log(result);
-        setLogData(result.data);
-        setLastLog(!result.data.some(obj => obj.end_datetime === null));
 
+      const response = await sendData(`/tasklogs/api/logs/${data.id}`);
+      if (response.response_type === 'success') {
+        setLogData(response.data);
+        setLastLog(!response.data.some(obj => obj.end_datetime === null));
       }
 
     } catch (error) {
@@ -51,17 +47,16 @@ const TaskDetails = ({ data }) => {
   }, [data?.id, lastLog])
 
   const actionTimeLog = async (action) => {
-    // console.log(data.id);
     try {
-      const { response, result } = await postRequest('/tasklogs/api/insert/log',
-        {
-          "task_id": data.id,
-          "req_type": action
-        }, {
+
+      await sendData(`/tasklogs/api/insert/log`, JSON.stringify({
+        "task_id": data.id,
+        "req_type": action
+      }), {
         headers: {
           "Content-Type": "application/json",
         }
-      }, true)
+      });
 
       FetchLogData();
 
@@ -71,7 +66,7 @@ const TaskDetails = ({ data }) => {
 
   }
 
-  if (!data) return (<>No Records Found</>)
+  if (!data) return (<div className='flex items-center justify-center h-[300px]'> <h2 className='text-2xl font-bold dark:text-white'>No Records Found</h2></div>)
 
   return (
     <>

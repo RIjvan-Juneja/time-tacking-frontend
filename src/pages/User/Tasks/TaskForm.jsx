@@ -5,12 +5,12 @@ import * as z from 'zod';
 import { Button, FileField, InputField, SelectBox, Textarea } from '../../../common/components/Forms/FormFields';
 import { useEffect, useState } from 'react';
 import Loader from '../../../common/components/Layout/Loader';
-import { postRequest } from '../../../common/helper/postRequest';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TASK_CATEGORY } from '../../../common/utils/constants';
+import useFetch from '../../../hooks/useFetch';
 
 // Zod schema for form validation
-const taskSchema = z.object({
+const taskSchema = z.object({ 
   title: z.string().min(1, { message: 'Task Title is required' }),
   category: z.string().min(1, { message: 'Task Type is required' }),
   description: z.string().optional(),
@@ -24,10 +24,12 @@ const taskSchema = z.object({
 
 const TaskForm = () => {
 
+  const { loading, sendData } = useFetch();
+
   const { _taskId } = useParams();
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [file, setFile] = useState({
     type: null,
     url: null
@@ -44,8 +46,6 @@ const TaskForm = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log("called");
-    setLoading(true);
 
     const formData = new FormData();
     formData.append('title', data.title);
@@ -58,24 +58,19 @@ const TaskForm = () => {
       formData.append('task_id', _taskId);
     }
 
-    // console.log(formData);
 
     try {
-      
-      const { response, result } = await postRequest(`/task/api/${ (!_taskId)? 'add' : 'edit'}`, formData);
 
-      if (response.status == 200) {
-        setLoading(false);
-        await Swal.fire(result.message);
+      const response = await sendData(`/task/api/${(!_taskId) ? 'add' : 'edit'}`, formData);
+
+      if (response.response_type === 'success') {
+        await Swal.fire(response.message);
         navigate('/user/task/list')
-
       } else {
-        setLoading(false);
-        await Swal.fire(result.message);
+        await Swal.fire(response.message);
       }
 
     } catch (error) {
-      setLoading(false);
       console.log(error);
     }
   };
@@ -83,23 +78,21 @@ const TaskForm = () => {
   const fetchData = async () => {
     if (_taskId) {
       try {
-        const { response, result } = await postRequest(`/task/api/getTasks/${_taskId}`);
+        const response = await sendData(`/task/api/getTasks/${_taskId}`);
 
-        if (response.status === 200) {
-          setValue("title", result.data.title);
-          setValue("category", result.data.category_id);
-          setValue("description", result.data.description);
-          if (result.data?.attachments.length != 0) {
+        if (response.response_type === 'success') {
+          setValue("title", response.data.title);
+          setValue("category", response.data.category_id);
+          setValue("description", response.data.description);
+          if (response.data?.attachments.length != 0) {
             setFile({
-              type: (['image/gif', 'image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml'].includes(result.data.attachments[0].file_type)) ? 'image' : 'file',
-              url: result.data.attachments[0].path
+              type: (['image/gif', 'image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml'].includes(response.data.attachments[0].file_type)) ? 'image' : 'file',
+              url: response.data.attachments[0].path
             })
           }
-
-          // setValue("attachment", result.data.attachment[0].path);
         } else {
+          console.log(response.message);
           navigate('/user/task/list')
-          console.log(result);
         }
 
       } catch (error) {
@@ -187,12 +180,12 @@ const TaskForm = () => {
           />
 
           <div className="flex justify-end">
-            <Button id="submit" lable={ _taskId? 'Update' : 'Submit' } type="submit" label="Submit" />
+            <Button id="submit" lable={_taskId ? 'Update' : 'Submit'} type="submit" label="Submit" />
           </div>
         </form>
       </div>
     </>
-  );  
+  );
 };
 
 export default TaskForm;

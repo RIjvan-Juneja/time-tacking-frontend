@@ -3,6 +3,7 @@ import useFetch from "../../../hooks/useFetch";
 import Chart from 'react-apexcharts';
 import { format } from 'date-fns';
 import ReactApexChart from "react-apexcharts";
+import CounterCard from "./components/CounterCard";
 
 const AdminDashboard = () => {
 
@@ -88,38 +89,12 @@ const AdminDashboard = () => {
       <div className="mx-9 mt-7 bg-white p-4">
 
         <div className="grid grid-cols-3 gap-3 mt-8">
-          <div className='border h-[130px] p-4 flex justify-center items-center shadow-md rounded-md'>
-            <div className="rounded-full border-dashed border-2 border-indigo-600 flex justify-center items-center h-[75px] w-[75px]"> <i className='bx bxs-user text-4xl'></i></div>
-            <div>
-              <h4 className='ml-5'>Total Users</h4>
-              <span className='ml-5 text-4xl'> {dashboard.totalUsers} </span>
-            </div>
-          </div>
-
-          <div className='border h-[130px] p-4 flex justify-center items-center shadow-md rounded-md'>
-
-            <div className="rounded-full border-dashed border-2 border-indigo-600 flex justify-center items-center h-[75px] w-[75px]"> <i className='bx bxs-objects-horizontal-right text-4xl'></i></div>
-            <div>
-
-              <h4 className='ml-5'>Active Users</h4>
-              <span className='ml-5 text-4xl'>  {dashboard.activeUsers}  </span>
-            </div>
-
-          </div>
-
-          <div className='border h-[130px] p-4 flex justify-center items-center shadow-md rounded-md'>
-
-            <div className="rounded-full border-dashed border-2 border-indigo-600 flex justify-center items-center h-[75px] w-[75px]"> <i className='bx bx-no-signal text-4xl'></i></div>
-            <div>
-              <h4 className='ml-5'>Unactive Users</h4>
-              <span className='ml-5 text-4xl'>  {dashboard.totalUsers - dashboard.activeUsers}  </span>
-            </div>
-
-          </div>
-
+          <CounterCard icon={<i className='bx bxs-user text-4xl'></i>} title='Total Users' data={dashboard.totalUsers} />
+          <CounterCard icon={<i className='bx bxs-objects-horizontal-right text-4xl'></i>} title='Active Users' data={dashboard.activeUsers} />
+          <CounterCard icon={<i className='bx bx-no-signal text-4xl'></i>} title='Unactive Users' data={dashboard.totalUsers - dashboard.activeUsers} />
         </div>
 
-        <div className="">
+        <div>
           <div className='mt-14 p-4 shadow-md '>
             <h2>User Statistics</h2>
             <ReactApexChart options={chartOptions} series={series} type="bar" height={350} />
