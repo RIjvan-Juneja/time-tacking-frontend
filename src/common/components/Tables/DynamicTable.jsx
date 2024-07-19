@@ -34,8 +34,8 @@ const DynamicTable = ({ columns = [], data = [] }) => {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-
-  const paginatedData = filteredData?.slice(
+  let paginatedData = [];
+  paginatedData = filteredData?.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );

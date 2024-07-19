@@ -22,34 +22,98 @@ const submitSchema = z.object({
 const ForgotPassword = () => {
 
   const { sendData } = useFetch();
-  const [error, setError] = useState(false);
+  const [errorAPI, setErrorAPI] = useState(false);
 
   const [timer, setTimer] = useState(0);
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const { control, handleSubmit, setError, getValues, clearErrors, formState: { errors } } = useForm({
     resolver: zodResolver(submitSchema),
     defaultValues: {
       email: '',
       password: '',
+      otp: '',
     }
   });
 
   const onSubmit = async (data) => {
-   console.log(data);
+    console.log(data);
+    try {
+
+      const response = await sendData(`/auth/api/verifyotp`, JSON.stringify(data), {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })
+      if (response.response_type ==='success') {
+        Swal.fire({
+          title: 'Success',
+          text: response.message,
+          icon: 'success',
+          confirmButtonText: 'Okay'
+        });
+      } else {
+        Swal.fire({
+          title: 'Something want Wrong!',
+          text: response.message,
+          icon: 'error',
+          confirmButtonText: 'Okay'
+        });
+      }
+
+    } catch (error) {
+      Swal.fire({
+        title: 'Something want Wrong!',
+        text: error,
+        icon: 'error',
+        confirmButtonText: 'Okay'
+      });
+    }
 
   }
 
-  const handleOtpSend = async (data) => {
-    setTimer(59)
-    const validatedData = await submitSchema.parseAsync(data);
-    console.log(validatedData.email);
+  const handleOtpSend = async () => {
+    try {
+      const email = getValues("email")
+      await sendOtpSchema.parseAsync({ email });
+      clearErrors(['email'])
 
-  } 
+      const response = await sendData(`/auth/api/generateotp`, JSON.stringify({ email }), {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })
 
-  useEffect(()=>{
+      setTimer(59)
+      if (response.response_type === 'success') {
+        Swal.fire({
+          title: 'Success',
+          text: 'OTP sent successfully',
+          icon: 'success',
+          confirmButtonText: 'Okay'
+        });
+      } else {
+        Swal.fire({
+          title: 'Try After 1 Minute',
+          text: response.message,
+          icon: 'error',
+          confirmButtonText: 'Okay'
+        });
+      }
+
+      console.log(response);
+
+    } catch (error) {
+      const errmsg = JSON.parse(error)[0].message
+      setError("email", { type: "manual", message: errmsg });
+    }
+
+
+  }
+
+  useEffect(() => {
     timer > 0 && setTimeout(() => setTimer(timer - 1), 1000);
-  },[timer])
-  
+  }, [timer])
+
   return (
     <>
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6">
@@ -79,7 +143,7 @@ const ForgotPassword = () => {
                       error={errors.email?.message}
                     />
                   )} />
-                  <Button lable={(timer)? timer : 'GET OTP'} onClick={handleOtpSend} isDisabled={timer} type="button" customClass='h-[43px] w-[130px] ml-3 mt-7' />
+                <Button lable={(timer) ? timer : 'GET OTP'} onClick={handleOtpSend} isDisabled={timer} type="button" customClass='h-[43px] w-[130px] ml-3 mt-7' />
               </div>
 
               <div className="">
@@ -116,7 +180,7 @@ const ForgotPassword = () => {
                   )} />
               </div>
 
-              {error && (<p className={`text-red-500 text-sm ${error ? ' ' : 'invisible'}`}>{(error) ? error : "."}</p>)}
+              {errorAPI && (<p className={`text-red-500 text-sm ${errorAPI ? ' ' : 'invisible'}`}>{(errorAPI) ? errorAPI : "."}</p>)}
 
               <div className="mt-6 flex items-center justify-between">
                 <div className="text-sm leading-5">
