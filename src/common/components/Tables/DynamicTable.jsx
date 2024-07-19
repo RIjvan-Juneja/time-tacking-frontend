@@ -20,7 +20,7 @@ const DynamicTable = ({ columns = [], data = [] }) => {
 
     const searchFilter = data.filter((row) =>
       columns.some((col) =>
-        String(row[col.accessor]).toLowerCase().includes(searchValue?.toLowerCase())
+        String(row[col.accessor]).toLowerCase().trim().includes(searchValue?.toLowerCase().trim())
       )
     );
     setFilteredData(searchFilter);

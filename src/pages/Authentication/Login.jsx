@@ -79,7 +79,6 @@ const Login = () => {
           </p>
         </div>
 
-        {/* id, name, label, type, value, placeholder, error, onChange */}
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form>
@@ -116,14 +115,6 @@ const Login = () => {
               </div>
 
               {unauthorized && (<p className={`text-red-500 text-sm ${unauthorized ? ' ' : 'invisible'}`}>{(unauthorized) ? unauthorized : "."}</p>)}
-
-              <div className="mt-6 flex items-center justify-between">
-                <div className="text-sm leading-5">
-                  <a href="#" className="font-medium text-blue-500 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150">
-                    Forgot your password?
-                  </a>
-                </div>
-              </div>
 
               <div className="mt-6">
                 <span className="block w-full rounded-md shadow-sm">

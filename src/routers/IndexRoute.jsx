@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import ProtectedWrapper from './ProtectedWrapper'
 import UserDashboard from '../pages/User/Dashboard/UserDashboard'
 import TaskList from "../pages/User/Tasks/TaskList";
@@ -10,8 +10,13 @@ import Registation from "../pages/Authentication/Registation";
 import AdminDashboard from "../pages/User/Dashboard/AdminDashboard";
 import Page404 from "../common/components/Layout/Page404";
 import Users from "../pages/User/UserData/Users";
+import ForgotPassword from "../pages/Authentication/ForgotPassword";
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Navigate to='/login' replace />,
+  },
   {
     path: "/user",
     element: <ProtectedWrapper role={['user']} />,
@@ -63,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "/registation",
         element: <Registation />,
+      },
+      {
+        path: "/forgotpassword",
+        element: <ForgotPassword />,
       }
     ]
   },

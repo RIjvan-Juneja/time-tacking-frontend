@@ -20,7 +20,7 @@ export const InputField = ({ id, name, label, type, value, placeholder, error, o
   );
 };
 
-export const SelectBox = React.memo(({ id, name, label, options, value, onChange, error, multiple }) => {
+export const SelectBox = ({ id, name, label, options, value, onChange, error, multiple }) => {
   return (
     <>
       <div className="mb-4">
@@ -48,9 +48,9 @@ export const SelectBox = React.memo(({ id, name, label, options, value, onChange
 
     </>
   )
-})
+}
 
-export const Textarea = React.memo(({ id, label, value, error, onChange }) => {
+export const Textarea = ({ id, label, value, error, onChange }) => {
   return (
     <>
       <div className="mb-4">
@@ -67,10 +67,9 @@ export const Textarea = React.memo(({ id, label, value, error, onChange }) => {
       </div>
     </>
   )
-})
+}
 
 export const Button = ({ id, type, lable, onClick, customClass, isDisabled }) => {
-  
   return (
     <>
       <button
@@ -86,7 +85,7 @@ export const Button = ({ id, type, lable, onClick, customClass, isDisabled }) =>
   )
 }
 
-export const MultiCheckBox = React.memo(({ value, id, label, isChecked, name, onChange }) => {
+export const MultiCheckBox = ({ value, id, label, isChecked, name, onChange }) => {
   return (
     <>
       <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
@@ -105,7 +104,7 @@ export const MultiCheckBox = React.memo(({ value, id, label, isChecked, name, on
       </li>
     </>
   )
-})
+}
 
 export const FileField = ({ id, name, label, error, onChange, previewsrc }) => {
   const [file, setFile] = useState({
