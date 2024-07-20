@@ -1,6 +1,11 @@
+import { combineReducers } from '@reduxjs/toolkit';
+import taskReducer from './slices/TasksSlice';
+import userReducer from './slices/UserSlice';
+import categoryReducer from './slices/CategorySlice';
 
 
-const rootReducer = combineReducers({ 
+export const rootReducer = combineReducers({ 
   user: userReducer,
-  notes: NotesReducer
+  tasks: taskReducer,
+  category: categoryReducer
 })

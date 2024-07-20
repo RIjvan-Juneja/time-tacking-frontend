@@ -1,14 +1,7 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import taskReducer from './slices/TasksSlice';
-import userReducer from './slices/UserSlice';
+import { configureStore } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
-
-const rootReducer = combineReducers({ 
-  user: userReducer,
-  tasks: taskReducer
-})
-
+import { rootReducer } from './rootReducer';
 
 const persistConfig = {
   key: 'root',

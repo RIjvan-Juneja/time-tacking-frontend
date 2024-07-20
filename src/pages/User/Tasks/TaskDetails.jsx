@@ -44,7 +44,6 @@ const TaskDetails = ({ data }) => {
     }
   }
 
-
   useEffect(() => {
     if (data) {
       FetchLogData();

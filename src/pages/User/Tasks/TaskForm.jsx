@@ -6,13 +6,13 @@ import { Button, FileField, InputField, SelectBox, Textarea } from '../../../com
 import { useEffect, useState } from 'react';
 import Loader from '../../../common/components/Layout/Loader';
 import { useNavigate, useParams } from 'react-router-dom';
-import { TASK_CATEGORY } from '../../../common/utils/constants';
 import useFetch from '../../../hooks/useFetch';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../redux/slices/UserSlice';
+import { fetchCategory } from '../../../redux/slices/CategorySlice';
 
 // Zod schema for form validation
-const taskSchema = z.object({ 
+const taskSchema = z.object({
   title: z.string().min(1, { message: 'Task Title is required' }),
   category: z.string().min(1, { message: 'Task Type is required' }),
   description: z.string().optional(),
@@ -28,11 +28,16 @@ const TaskForm = () => {
 
   const { loading, sendData } = useFetch();
   const dispatch = useDispatch();
+  const category = useSelector((state) => state.category);
+  console.log(category.category.data, 'cte');
 
   const { _taskId } = useParams();
   const navigate = useNavigate();
 
-  // const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    dispatch(fetchCategory());
+  }, [])
+
   const [file, setFile] = useState({
     type: null,
     url: null
@@ -69,7 +74,7 @@ const TaskForm = () => {
       if (response.response_type === 'success') {
         await Swal.fire(response.message);
         navigate('/user/task/list')
-      }else if(response.response_type === 'unauthorized'){
+      } else if (response.response_type === 'unauthorized') {
         dispatch(logout());
       } else {
         await Swal.fire(response.message);
@@ -87,7 +92,7 @@ const TaskForm = () => {
 
         if (response.response_type === 'success') {
           setValue("title", response.data.title);
-          setValue("category", response.data.category_id);
+          setValue("category", `${response.data.category_id}`);
           setValue("description", response.data.description);
           if (response.data?.attachments.length != 0) {
             setFile({
@@ -147,7 +152,7 @@ const TaskForm = () => {
                 label="Task Type *"
                 ref={null}
 
-                options={TASK_CATEGORY}
+                options={category.category.data}
                 error={errors.category?.message}
               />
             )}

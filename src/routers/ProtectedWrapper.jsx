@@ -8,13 +8,9 @@ const ProtectedWrapper = ({ role }) => {
   try {
     const getRole = useSelector((state) => state.user.role)
 
-    console.log(role,getRole);
-
     if (!getRole) {
       return <Navigate to="/login" />;
     }
-
-    console.log(role[0],getRole , role[0] !== getRole )
 
     if (role[0] !== getRole) {
       return <Navigate to="/pageNotFound" />;

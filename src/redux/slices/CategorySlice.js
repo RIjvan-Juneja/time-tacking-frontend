@@ -1,17 +1,18 @@
 // src/features/task/taskSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { postRequest } from '../../common/helper/postRequest'; // Adjust the path to where your function is located
-import useFetch from '../../hooks/useFetch';
 
 export const fetchCategory = createAsyncThunk('tasks/fetchTasks', async () => {
-  const { result } = await postRequest('/task/api/getTasks');
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/task/api/categorys`,{
+    method: 'POST'
+  });
+  const result = await response.json();
   return result;
 });
 
 const categorySlice = createSlice({
   name: 'category',
   initialState: {
-    task: {
+    category: {
       data: [],
       status: 'idle',
       error: false,
@@ -23,17 +24,16 @@ const categorySlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchCategory.pending, (state) => {
-        state.task.status = 'loading';
+        state.category.status = 'loading';
       })
       .addCase(fetchCategory.fulfilled, (state, action) => {
-        console.log(action);
-        state.task.status = 'success';
-        state.task.data = action.payload;
-        state.task.error = false;
+        state.category.status = 'success';
+        state.category.data = action.payload.data;
+        state.category.error = false;
       })
       .addCase(fetchCategory.rejected, (state, action) => {
-        state.task.status = 'failed';
-        state.task.error = action.error.message;
+        state.category.status = 'failed';
+        state.category.error = action.error.message;
       });
   }
 });

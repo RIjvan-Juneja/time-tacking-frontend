@@ -6,6 +6,7 @@ import useFetch from '../../../hooks/useFetch';
 import { format, subMonths } from 'date-fns';
 import CounterCard from './components/CounterCard';
 import { logout } from '../../../redux/slices/UserSlice';
+import { fetchCategory } from '../../../redux/slices/CategorySlice';
 
 
 const UserDashboard = () => {
@@ -16,6 +17,7 @@ const UserDashboard = () => {
   })
 
   const tasks = useSelector((state) => state.tasks.task);
+
   const dispatch = useDispatch();
   const { sendData } = useFetch();
 
@@ -40,7 +42,6 @@ const UserDashboard = () => {
 
     const runningTask = async () => {
       const response = await sendData('/tasklogs/api/runningtask');
-      console.log(response.data);
       setDashboard((prevState) => {
         return { ...prevState, runningTask: response.data.length }
       })
@@ -49,6 +50,7 @@ const UserDashboard = () => {
     fetchComparisonData();
     fetchMonthlyProgress();
     runningTask();
+    dispatch(fetchCategory())
   }, []);
 
   const comparisonChartOptions = {
@@ -92,6 +94,9 @@ const UserDashboard = () => {
     if (tasks.status === 'idle') {
       dispatch(fetchTasks());
     }
+
+    // if(categorys)
+
   }, [tasks.status, dispatch]);
 
   return (

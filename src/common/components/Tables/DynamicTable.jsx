@@ -33,7 +33,7 @@ const DynamicTable = ({ columns = [], data = [] }) => {
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
-  };
+  };                                                                                                                                                
   let paginatedData = [];
   paginatedData = filteredData?.slice(
     (currentPage - 1) * rowsPerPage,
@@ -81,7 +81,7 @@ const DynamicTable = ({ columns = [], data = [] }) => {
               <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 {columns.map((col) => (
                   <td key={col.accessor} className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                    {col.Cell ? col.Cell(row[col.accessor], row) : row[col.accessor]}
+                    {col.Cell? col.Cell(row[col.accessor], row) : `${(row[col.accessor].toString().length > 10)? row[col.accessor].toString().substring(0,13) + '....' : row[col.accessor]}`}
                   </td>
                 ))}
               </tr>
