@@ -8,14 +8,17 @@ import Swal from 'sweetalert2'
 import TaskDetails from "./TaskDetails";
 import useFetch from "../../../hooks/useFetch";
 import { logout } from "../../../redux/slices/UserSlice";
+import Loader from "../../../common/components/Layout/Loader";
 
 
 const TaskList = () => {
 
-  const { sendData } = useFetch();
+  const { loading, sendData } = useFetch();
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks.task);
+  console.log(tasks, "tasks")
   const [selectedTask, setSelectedTask] = useState(null);
+  // const [filteredData, setFilteredData] = useState([]);
   const navigate = useNavigate();
 
 
@@ -27,11 +30,7 @@ const TaskList = () => {
     if (tasks.status === 'idle') {
       dispatch(fetchTasks());
     }
-  }, [tasks.status, dispatch]);
-
-  if (tasks.status === 'loading') {
-    return <div>Loading...</div>;
-  }
+  }, []);
 
   if (tasks.status === 'failed') {
     return <div>Error: {tasks.error}</div>;
@@ -59,7 +58,7 @@ const TaskList = () => {
           icon: "success"
         });
         dispatch(fetchTasks());
-      }else if(response.response_type === 'unauthorized'){
+      } else if (response.response_type === 'unauthorized') {
         dispatch(logout());
       } else {
         Swal.fire({
@@ -77,7 +76,7 @@ const TaskList = () => {
     { Header: 'Id', accessor: 'id' },
     { Header: 'Title', accessor: 'title' },
     {
-      Header: 'Task Type', accessor: 'category_name',
+      Header: 'Task Type', accessor: '',
       Cell: (_, row) => (
         <>
           {row.category?.name}
@@ -88,6 +87,7 @@ const TaskList = () => {
     {
       Header: 'Action', accessor: 'action',
       Cell: (_, row) => (
+
         <>
           <button type='button' onClick={() => navigate(`/user/task/form/${row.id}`)} className="font-medium ml-2 mr-4 text-green-600 dark:text-red-500 hover:underline">
             <i className='bx bxs-edit text-xl'></i>
@@ -109,6 +109,7 @@ const TaskList = () => {
 
   return (
     <>
+      { (tasks.status === 'loading' || loading) && <Loader />  }
       <div className="flex justify-between">
         <h3 className="mx-9 mt-9 text-3xl font-bold dark:text-white">Task List</h3>
         <div className="mt-12 mr-7">

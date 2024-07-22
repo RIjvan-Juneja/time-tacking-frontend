@@ -1,7 +1,7 @@
 // src/features/task/taskSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export const fetchCategory = createAsyncThunk('tasks/fetchTasks', async () => {
+export const fetchCategory = createAsyncThunk('/get/category', async () => {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/task/api/categorys`,{
     method: 'POST'
   });

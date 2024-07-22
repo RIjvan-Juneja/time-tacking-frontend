@@ -34,9 +34,10 @@ const TaskDetails = ({ data }) => {
       if (response.response_type === 'success') {
         setLogData(response.data);
         setLastLog(!response.data.some(obj => obj.end_datetime === null));
-      }   
-      if(response.response_type === 'unauthorized'){
+      }else if(response.response_type === 'unauthorized'){
         dispatch(logout());
+      } else {
+        console.log(response.message);
       }
 
     } catch (error) {

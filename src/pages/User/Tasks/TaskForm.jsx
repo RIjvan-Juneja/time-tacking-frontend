@@ -29,7 +29,6 @@ const TaskForm = () => {
   const { loading, sendData } = useFetch();
   const dispatch = useDispatch();
   const category = useSelector((state) => state.category);
-  console.log(category.category.data, 'cte');
 
   const { _taskId } = useParams();
   const navigate = useNavigate();

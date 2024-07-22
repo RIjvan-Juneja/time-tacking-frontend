@@ -17,7 +17,6 @@ export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (args,{ get
 
   const result = await response.json();
   return result;
-
 });
 
 const taskSlice = createSlice({
@@ -26,7 +25,7 @@ const taskSlice = createSlice({
   initialState: {
     task: {
       data: [],
-      filteredData:[],
+      filteredData: [],
       status: 'idle',
       error: false,
     },
