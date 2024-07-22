@@ -4,6 +4,8 @@ import { Button } from '../../../common/components/Forms/FormFields';
 import useFetch from '../../../hooks/useFetch';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../redux/slices/UserSlice';
+import socketClient from 'socket.io-client';
+import Swal from 'sweetalert2';
 
 const InfoTime = ({ customClass, time, lable }) => {
   return (
@@ -21,6 +23,7 @@ const InfoTime = ({ customClass, time, lable }) => {
 }
 
 const TaskDetails = ({ data }) => {
+  const socket = socketClient(import.meta.env.VITE_API_URL);
 
   const [lastLog, setLastLog] = useState(true)
   const [logData, setLogData] = useState([])
@@ -34,7 +37,7 @@ const TaskDetails = ({ data }) => {
       if (response.response_type === 'success') {
         setLogData(response.data);
         setLastLog(!response.data.some(obj => obj.end_datetime === null));
-      }else if(response.response_type === 'unauthorized'){
+      } else if (response.response_type === 'unauthorized') {
         dispatch(logout());
       } else {
         console.log(response.message);
@@ -51,10 +54,18 @@ const TaskDetails = ({ data }) => {
     }
   }, [data?.id, lastLog])
 
+  socket.on('res_for_log', (result) => {
+    // console.log(result == data.id, "data compare", result, data.id);
+    if (result === data.id) {
+      FetchLogData();
+    }
+  })
+
   const actionTimeLog = async (action) => {
+
     try {
 
-      await sendData(`/tasklogs/api/insert/log`, JSON.stringify({
+      const response = await sendData(`/tasklogs/api/insert/log`, JSON.stringify({
         "task_id": data.id,
         "req_type": action
       }), {
@@ -63,9 +74,25 @@ const TaskDetails = ({ data }) => {
         }
       });
 
-      FetchLogData();
+      if (response.response_type === 'success') {
+        setLastLog(!lastLog)
+        socket.emit('req_for_log', data.id)
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: response.message,
+        });
+      }
+
+      console.log(response);
 
     } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error,
+      });
       console.log(error);
     }
 
