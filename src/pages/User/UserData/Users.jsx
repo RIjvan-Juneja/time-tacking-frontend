@@ -54,7 +54,7 @@ const Users = () => {
 
       <div className="mx-9 mt-7 bg-white p-4">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-5" >
-          <DynamicTable columns={columns} data={users} />
+          <DynamicTable columns={columns} data={users} dataPerPage={5} />
         </div>
       </div>
     </>

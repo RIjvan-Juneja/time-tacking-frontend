@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 
-const DynamicTable = ({ columns = [], data = [] }) => {
+const DynamicTable = ({ columns, data, dataPerPage, CeildataLength }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState(data);
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = dataPerPage ? dataPerPage : 10;
+  const stringLength = CeildataLength ? CeildataLength : 20;
 
   useEffect(() => {
     setFilteredData(data);
@@ -33,7 +34,7 @@ const DynamicTable = ({ columns = [], data = [] }) => {
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
-  };                                                                                                                                                
+  };
   let paginatedData = [];
   paginatedData = filteredData?.slice(
     (currentPage - 1) * rowsPerPage,
@@ -85,7 +86,7 @@ const DynamicTable = ({ columns = [], data = [] }) => {
               4	task3	er-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 {columns.map((col) => (
                   <td key={col.accessor} className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                     {col.Cell? col.Cell(row[col.accessor], row) : (row[col.accessor]?.toString().length > 10)? row[col.accessor]?.toString().substring(0,13) + '....' : row[col.accessor]}
+                    {col.Cell ? col.Cell(row[col.accessor], row) : (row[col.accessor]?.toString().length > stringLength) ? row[col.accessor]?.toString().substring(0, 13) + '....' : row[col.accessor]}
                   </td>
                 ))}
               </tr>
