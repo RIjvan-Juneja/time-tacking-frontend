@@ -9,16 +9,15 @@ import TaskDetails from "./TaskDetails";
 import useFetch from "../../../hooks/useFetch";
 import { logout } from "../../../redux/slices/UserSlice";
 import Loader from "../../../common/components/Layout/Loader";
-
+import { fetchCategory } from "../../../redux/slices/CategorySlice";
 
 const TaskList = () => {
 
   const { loading, sendData } = useFetch();
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks.task);
-  console.log(tasks, "tasks")
+  const category = useSelector((state) => state.category);
   const [selectedTask, setSelectedTask] = useState(null);
-  // const [filteredData, setFilteredData] = useState([]);
   const navigate = useNavigate();
 
 
@@ -30,6 +29,11 @@ const TaskList = () => {
     if (tasks.status === 'idle') {
       dispatch(fetchTasks());
     }
+
+    if(category.category.status === 'idle'){
+      dispatch(fetchCategory());
+    }
+
   }, []);
 
   if (tasks.status === 'failed') {
@@ -50,7 +54,6 @@ const TaskList = () => {
     if (swals.isConfirmed) {
 
       const response = await sendData(`/task/api/delete/${_id}`);
-      console.log(response);
       if (response.response_type === 'deleted') {
         Swal.fire({
           title: "Deleted!",
@@ -66,7 +69,6 @@ const TaskList = () => {
           title: "Oops...",
           text: "Something went wrong!",
         });
-        console.log(response.message);
       }
 
     }
@@ -107,6 +109,7 @@ const TaskList = () => {
     dispatch(filterTasksByCategory(e.target.value));
   }
 
+
   return (
     <>
       { (tasks.status === 'loading' || loading) && <Loader />  }
@@ -121,9 +124,10 @@ const TaskList = () => {
         <div className="flex flex-wrap justify-between">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-[1050px] p-5" >
             <select onChange={filterTask} id="small" className="block absolute w-[270px] p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option selected value='0'>All Tasks</option>
-              <option value="1">Personal</option>
-              <option value="2">Work</option>
+              <option value='0'>All Tasks</option>
+              { category?.category?.data.map((option) => {
+                return <option key={option.value} value={option.value}>{option.label}</option>;
+              }) }
             </select>
             <DynamicTable columns={columns} data={tasks.filteredData} />
           </div>
