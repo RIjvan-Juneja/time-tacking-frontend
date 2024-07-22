@@ -19,9 +19,9 @@ const taskSchema = z.object({
   attachment: z.any().optional().refine(file => {
     if (!file) return true; // No file is allowed
     const fileType = file.type;
-    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "application/pdf", "text/csv", "text/plain"];
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
     return allowedTypes.includes(fileType);
-  }, { message: 'Only images (jpg, png, gif), PDF, CSV, or TXT files are allowed' })
+  }, { message: 'Only images (jpg, png, gif) files are allowed' })
 });
 
 const TaskForm = () => {
