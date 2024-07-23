@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { format } from "date-fns";
 import { Button } from '../../../common/components/Forms/FormFields';
 import useFetch from '../../../hooks/useFetch';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../redux/slices/UserSlice';
-import socketClient from 'socket.io-client';
+// import socketClient from 'socket.io-client';
 import Swal from 'sweetalert2';
+import { socketContext } from '../../../ contexts/SocketProvider';
 
 const InfoTime = ({ customClass, time, lable }) => {
   return (
@@ -23,8 +24,9 @@ const InfoTime = ({ customClass, time, lable }) => {
 }
 
 const TaskDetails = ({ data }) => {
-  const socket = socketClient(import.meta.env.VITE_API_URL);
 
+  const { socket } = useContext(socketContext);
+  // console.log(socket);
   const [lastLog, setLastLog] = useState(true)
   const [logData, setLogData] = useState([])
   const { sendData } = useFetch();
@@ -54,12 +56,12 @@ const TaskDetails = ({ data }) => {
     }
   }, [data?.id, lastLog])
 
-  socket.on('res_for_log', (result) => {
-    // console.log(result == data.id, "data compare", result, data.id);
-    if (result === data.id) {
-      FetchLogData();
-    }
-  })
+  // socket.on('res_for_log', (result) => {
+  //   // console.log(result == data.id, "data compare", result, data.id);
+  //   if (result === data.id) {
+  //     FetchLogData();
+  //   }
+  // })
 
   const actionTimeLog = async (action) => {
 
@@ -76,7 +78,7 @@ const TaskDetails = ({ data }) => {
 
       if (response.response_type === 'success') {
         setLastLog(!lastLog)
-        socket.emit('req_for_log', data.id)
+        // socket.emit('req_for_log', data.id)
       } else {
         Swal.fire({
           icon: "error",
