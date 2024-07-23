@@ -1,12 +1,11 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { format } from "date-fns";
 import { Button } from '../../../common/components/Forms/FormFields';
 import useFetch from '../../../hooks/useFetch';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../redux/slices/UserSlice';
-// import socketClient from 'socket.io-client';
 import Swal from 'sweetalert2';
-import { socketContext } from '../../../ contexts/SocketProvider';
+import { socket } from '../../../common/helper/socket';
 
 const InfoTime = ({ customClass, time, lable }) => {
   return (
@@ -25,8 +24,6 @@ const InfoTime = ({ customClass, time, lable }) => {
 
 const TaskDetails = ({ data }) => {
 
-  const { socket } = useContext(socketContext);
-  // console.log(socket);
   const [lastLog, setLastLog] = useState(true)
   const [logData, setLogData] = useState([])
   const { sendData } = useFetch();
@@ -56,12 +53,7 @@ const TaskDetails = ({ data }) => {
     }
   }, [data?.id, lastLog])
 
-  // socket.on('res_for_log', (result) => {
-  //   // console.log(result == data.id, "data compare", result, data.id);
-  //   if (result === data.id) {
-  //     FetchLogData();
-  //   }
-  // })
+
 
   const actionTimeLog = async (action) => {
 
@@ -78,7 +70,7 @@ const TaskDetails = ({ data }) => {
 
       if (response.response_type === 'success') {
         setLastLog(!lastLog)
-        // socket.emit('req_for_log', data.id)
+        socket.emit('req_for_log', data.id)
       } else {
         Swal.fire({
           icon: "error",
@@ -100,13 +92,26 @@ const TaskDetails = ({ data }) => {
 
   }
 
-  if (!data) return (<div className='flex items-center justify-center h-[300px]'> <h2 className='text-2xl font-bold dark:text-white'>No Records Found</h2></div>)
+  useEffect(() => {
+    console.log(data);
+    if (data) {
+      socket.on('res_for_log', (result) => {
+        console.log("ressss",result);
+        if (result === data.id) {
+          FetchLogData();
+        }
+      })
+    }
+  }, [data?.id])
 
+
+
+  if (!data) return (<div className='flex items-center justify-center h-[300px]'> <h2 className='text-2xl font-bold dark:text-white'>No Records Found</h2></div>)
   return (
     <>
       <div className="grid grid-cols-2 gap-4 mt-5 mb-3">
         <Button type="button" lable="start" isDisabled={!lastLog} onClick={() => actionTimeLog('start')} />
-        <Button type="button" lable="puase" isDisabled={lastLog} onClick={() => actionTimeLog('end')} />
+        <Button type="button" lable="pause" isDisabled={lastLog} onClick={() => actionTimeLog('end')} />
       </div>
       <hr />
 

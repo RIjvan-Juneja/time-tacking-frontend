@@ -4,18 +4,25 @@ import { persistor, store } from '../redux/store';
 import IndexRoute from '../routers/IndexRoute';
 import { PersistGate } from 'redux-persist/integration/react';
 import { SocketProvider } from '../ contexts/SocketProvider';
+import { socket } from '../common/helper/socket';
+import { useEffect } from 'react';
+
 
 function App() {
 
+  useEffect(()=>{
+    socket.connect()
+  },[])
+
   return (
     <>
-      <SocketProvider>
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <SocketProvider>
             <IndexRoute />
-          </PersistGate>
-        </Provider>
-      </SocketProvider>
+          </SocketProvider>
+        </PersistGate>
+      </Provider>
     </>
   )
 }

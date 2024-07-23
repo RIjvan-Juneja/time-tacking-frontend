@@ -1,23 +1,26 @@
 import { createContext, useEffect, useState } from 'react';
-import socketClient from 'socket.io-client';
+import { io } from 'socket.io-client';
 
-const socketContext = createContext();
+export const socketContext = createContext();
 
-const SocketProvider = ({ children }) => {
+export const SocketProvider = ({ children }) => {
+  // const socketConnection = io(import.meta.env.VITE_API_URL);
+  // socketConnection.connect();
+  const [socketss, setSocket] = useState(false);
 
-  const [socket, setSocket] = useState();
+  // useEffect(() => {
 
-  useEffect(() => {
-    const socketConnection = socketClient(import.meta.env.VITE_API_URL);
-    setSocket(socketConnection);
-    return () => socket.disconnect();
-  }, []);
+  //   async function socketConnect() {
+  //     setSocket(socketConnection);
+  //   }
+  //   socketConnect()
+  //   // return () => socketConnection.disconnect();
+  // }, []);
 
   return (
-    <socketContext.Provider value={socket}>
+    <socketContext.Provider value={{ socketss }}>
       {children}
     </socketContext.Provider>
   );
 };
 
-export { socketContext, SocketProvider };
