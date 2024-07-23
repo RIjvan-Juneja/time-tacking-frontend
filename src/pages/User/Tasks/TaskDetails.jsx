@@ -4,6 +4,8 @@ import { Button } from '../../../common/components/Forms/FormFields';
 import useFetch from '../../../hooks/useFetch';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../redux/slices/UserSlice';
+import Swal from 'sweetalert2';
+import { socket } from '../../../common/helper/socket';
 
 const InfoTime = ({ customClass, time, lable }) => {
   return (
@@ -34,7 +36,7 @@ const TaskDetails = ({ data }) => {
       if (response.response_type === 'success') {
         setLogData(response.data);
         setLastLog(!response.data.some(obj => obj.end_datetime === null));
-      }else if(response.response_type === 'unauthorized'){
+      } else if (response.response_type === 'unauthorized') {
         dispatch(logout());
       } else {
         console.log(response.message);
@@ -51,10 +53,13 @@ const TaskDetails = ({ data }) => {
     }
   }, [data?.id, lastLog])
 
+
+
   const actionTimeLog = async (action) => {
+
     try {
 
-      await sendData(`/tasklogs/api/insert/log`, JSON.stringify({
+      const response = await sendData(`/tasklogs/api/insert/log`, JSON.stringify({
         "task_id": data.id,
         "req_type": action
       }), {
@@ -63,21 +68,50 @@ const TaskDetails = ({ data }) => {
         }
       });
 
-      FetchLogData();
+      if (response.response_type === 'success') {
+        setLastLog(!lastLog)
+        socket.emit('req_for_log', data.id)
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: response.message,
+        });
+      }
+
+      console.log(response);
 
     } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error,
+      });
       console.log(error);
     }
 
   }
 
-  if (!data) return (<div className='flex items-center justify-center h-[300px]'> <h2 className='text-2xl font-bold dark:text-white'>No Records Found</h2></div>)
+  useEffect(() => {
+    console.log(data);
+    if (data) {
+      socket.on('res_for_log', (result) => {
+        console.log("ressss",result);
+        if (result === data.id) {
+          FetchLogData();
+        }
+      })
+    }
+  }, [data?.id])
 
+
+
+  if (!data) return (<div className='flex items-center justify-center h-[300px]'> <h2 className='text-2xl font-bold dark:text-white'>No Records Found</h2></div>)
   return (
     <>
       <div className="grid grid-cols-2 gap-4 mt-5 mb-3">
         <Button type="button" lable="start" isDisabled={!lastLog} onClick={() => actionTimeLog('start')} />
-        <Button type="button" lable="puase" isDisabled={lastLog} onClick={() => actionTimeLog('end')} />
+        <Button type="button" lable="pause" isDisabled={lastLog} onClick={() => actionTimeLog('end')} />
       </div>
       <hr />
 

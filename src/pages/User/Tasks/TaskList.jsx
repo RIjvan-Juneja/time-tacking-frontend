@@ -116,7 +116,7 @@ const TaskList = () => {
       <div className="flex justify-between">
         <h3 className="mx-9 mt-9 text-3xl font-bold dark:text-white">Task List</h3>
         <div className="mt-12 mr-7">
-          <NavLink to='/task/form' className="text-white cursor-pointer bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Add Task</NavLink>
+          <NavLink to='/user/task/form' className="text-white cursor-pointer bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Add Task</NavLink>
         </div>
       </div>
       <div className="mx-9 mt-7 bg-white p-4">
